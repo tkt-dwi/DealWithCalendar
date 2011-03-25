@@ -1,5 +1,7 @@
 package dealwithcalendar;
 
+import java.util.*;
+
 /**
  * Calendar class (NOT java.util.Calendar) representing one schoolyear, containing the courses for it
  * 
@@ -8,6 +10,7 @@ package dealwithcalendar;
  */
 public class Calendar implements Comparable<Calendar>
 {
+	private TreeSet<Comparable<Course>> courses; //List of courses in this calendar
 	private int year; //The year this Calendar represents
 	
 	/**
@@ -21,6 +24,25 @@ public class Calendar implements Comparable<Calendar>
 	}
 	
 	/**
+	 * Add a course to the calendar
+	 * @param _c The course to be added
+	 */
+	public void addCourse(Course _c)
+	{
+		courses.add(_c);
+	}
+	
+	/**
+	 * Remove a course from the calendar
+	 * @param _c The course to be removed
+	 */
+	public void removeCourse(Course _c)
+	{
+		courses.remove(_c);
+	}
+	
+	/**
+	 * Compares two Calendars. Required by Comparable<Calendar>
 	 * 
 	 * @param _c The Calendar being compared to
 	 * @return Negative if this Calendar is earlier, positive if later, 0 if they're the same year
