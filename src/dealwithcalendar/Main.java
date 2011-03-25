@@ -17,6 +17,10 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("DEAL WITH IT NOOB!");
         System.out.println("TERVE t:Nyman");
+        
+        new CalendarGUI(500,500);
+        while (true)
+        {}
     }
 
 }
