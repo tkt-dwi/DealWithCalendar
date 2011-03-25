@@ -13,6 +13,7 @@ import javax.swing.*;
  */
 public class CalendarGUI extends JFrame
 {
+	private input.Mouse mouse;
 	/**
 	 * Constructor, sets the window up, centers it and changes the icon
 	 * 
@@ -26,6 +27,9 @@ public class CalendarGUI extends JFrame
 		JPanel temp = (JPanel) this.getContentPane(); //Get the content pane..
 		temp.setPreferredSize(this.getSize()); //..and set its preferred size
 		this.setLocationRelativeTo(null); //Center the window
+		
+		mouse = new input.Mouse(); //create a mouse listener
+		this.addMouseListener(mouse); //add the mouse listener to the window
 		
 		try
 		{	//set the logo as icon
