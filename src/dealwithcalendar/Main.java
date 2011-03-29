@@ -7,7 +7,7 @@ package dealwithcalendar;
 
 /**
  *
- * @author koheikki
+ * @author Deal With It Productions
  */
 public class Main {
 
@@ -18,9 +18,12 @@ public class Main {
         System.out.println("DEAL WITH IT NOOB!");
         System.out.println("TERVE t:Nyman");
         
-        new CalendarGUI(500,500);
+        GUI gui = new GUI();
+        /*
         while (true)
         {}
+         * 
+         */
     }
 
 }

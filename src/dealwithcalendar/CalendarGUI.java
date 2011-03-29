@@ -30,8 +30,8 @@ public class CalendarGUI extends JFrame
 		
 		mouse = new input.Mouse(); //create a mouse listener
 		this.addMouseListener(mouse); //add the mouse listener to the window
-		
-		try
+
+                try
 		{	//set the logo as icon
 			this.setIconImage(ImageIO.read(new File("icon.jpg")));
 		} catch (IOException ex)
