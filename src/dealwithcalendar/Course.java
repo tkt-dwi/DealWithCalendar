@@ -17,55 +17,47 @@ public class Course implements Comparable<Course> {
 
     /**
      * Constructor to init a new course. The params dictate the starting and ending date, earned credits and courseID
-     * @param _startYear
-     * @param _startMonth
-     * @param _startDay
-     * @param _endYear
-     * @param _endMonth
-     * @param _endDay
-     * @param _name
-     * @param _id
-     * @param _cr
+     * @param _start The date when course starts
+     * @param _end The date when course ends
+     * @param _name The date when course ends
+     * @param _id The id identifying the course
+     * @param _cr Course credits gained from the course
      */
-    public Course(int _startYear, int _startMonth, int _startDay, int _endYear, int _endMonth, int _endDay, String _name, int _id, int _cr) {
-        initializeFields(_startYear, _startMonth, _startDay, _endYear, _endMonth, _endDay, _name);
+    public Course(Calendar _start, Calendar _end, String _name, int _id, int _cr) {
+        initializeFields(_start, _end, _name);
         id = _id;
         cr = _cr;
     }
 
     /**
      * Constructor to init a new course. No credits or courseID used
-     * @param _startYear
-     * @param _startMonth
-     * @param _startDay
-     * @param _endYear
-     * @param _endMonth
-     * @param _endDay
+     * @param _start The date when course starts
+     * @param _end The date when course ends
      * @param _name
      */
 
-    public Course(int _startYear, int _startMonth, int _startDay, int _endYear, int _endMonth, int _endDay, String _name) {
-        initializeFields(_startYear, _startMonth, _startDay, _endYear, _endMonth, _endDay, _name);
+    public Course(Calendar _start, Calendar _end, String _name) {
+        initializeFields(_start, _end, _name);
     }
 
-    private void initializeFields(int _startYear, int _startMonth, int _startDay, int _endYear, int _endMonth, int _endDay, String _name) {
-        start = Calendar.getInstance();
-        end = Calendar.getInstance();
-        start.set(_startYear, _startMonth, _startDay);
-        end.set(_endYear, _endMonth, _endDay);
-        name = _name;
+    //Private method for initializing the fields, just avoiding rewriting this for both constructors
+
+    private void initializeFields(Calendar _start, Calendar _end, String _name) {
+        this.start = _start;
+        this.end = _end;
+        this.name = _name;
     }
 
-    /** Adds a new course event to the course.
-     *
-     * @param _day  Number representation of the weekday (type int is just a workin
-     *              version so far)
-     * @param _starttime Time in intform i.e. 1415
+    /**
+     * Method for adding an event to this course
+     * @param _starttime
+     * @param _endtime
      * @param _location
+     * @param eventName
      */
-    public void addCourseEvent(int _day, int _starttime, String _location) {
-        //Event cEvent = new Event (_day, _starttime, _location);
-        // cEvents.add(cEvent);
+    public void addCourseEvent(Calendar _starttime, Calendar _endtime, String _location, String eventName) {
+        Event cEvent = new Event (_starttime, _endtime, _location, eventName, id);
+        cEvents.add(cEvent);
     }
 
     /**

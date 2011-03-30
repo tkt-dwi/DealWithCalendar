@@ -43,7 +43,13 @@ public class dwiCalendar implements Comparable<dwiCalendar>
 	{
 		courses.remove(_c);
 	}
-	
+        /**
+         * Getter for the year this calendar represents
+         * @return The year in question
+         */
+	public int getYear(){
+            return year;
+        }
 	/**
 	 * Compares two Calendars. Required by Comparable<dwiCalendar>
 	 * 

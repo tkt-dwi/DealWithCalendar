@@ -23,39 +23,31 @@ public class Event implements Comparable<Event>{
     /**
      * Creates a new event with given parameters
      *
-     * @param _year
-     * @param _day
-     * @param _month
-     * @param _starthour
-     * @param _endhour
-     * @param _location
-     * @param _name
+     * @param _starttime The starting time of the event
+     * @param _endtime The ending time of the event
+     * @param _location Location of the event (For example, a classroom)
+     * @param _name Name of the event
      */
-    public Event(int _year, int _day, int _month, int _starthour, int _endhour, String _location, String _name){
-        initializeFields(_year, _day, _month, _starthour, _endhour, _location, _name);
+    public Event(Calendar _starttime, Calendar _endtime, String _location, String _name){
+        initializeFields(_starttime, _endtime, _location, _name);
     }
    /**
     * Same as before, but tied to a given courseID which identifies the course used.
     *
-    * @param _year
-    * @param _day
-    * @param _month
-    * @param _starthour
-    * @param _endhour
-    * @param _location
-    * @param _name
-    * @param _courseID
+    * @param _starttime The starting time of the event
+    * @param _endtime The ending time of the event
+    * @param _location Location of the event (For example, a classroom)
+    * @param _name Name of the event
+    * @param _courseID courseID of the event
     */
-    public Event(int _year, int _day, int _month, int _starthour, int _endhour, String _location, String _name, int _courseID){
-        initializeFields(_year, _day, _month, _starthour, _endhour, _location, _name);
+    public Event(Calendar _starttime, Calendar _endtime, String _location, String _name, int _courseID){
+        initializeFields(_starttime, _endtime, _location, _name);
         this.courseID = _courseID;
     }
 
-    private void initializeFields(int _year, int _day, int _month, int _starthour, int _endhour, String _location, String _name) {
-        starttime = Calendar.getInstance();
-        endtime = Calendar.getInstance();
-        starttime.set(_year, _month, _day, _starthour, 0);
-        endtime.set(_year, _month, _day, _endhour, 0);
+    private void initializeFields(Calendar _starttime, Calendar _endtime, String _location, String _name) {
+        this.starttime = _starttime;
+        this.endtime = _endtime;
         this.location = _location;
         this.name = _name;
     }
