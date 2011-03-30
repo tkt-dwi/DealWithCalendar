@@ -3,7 +3,7 @@ package dealwithcalendar;
 import java.util.*;
 
 /**
- * dwiCalendar class (NOT java.util.dwiCalendar) representing one schoolyear, containing the courses for it
+ * dwiCalendar class (NOT java.util.Calendar) representing one schoolyear, containing the courses for it
  * 
  * @author Deal With It Productions
  * @version 0.1
@@ -11,7 +11,7 @@ import java.util.*;
 public class dwiCalendar implements Comparable<dwiCalendar>
 {
 	private TreeSet<Comparable<Course>> courses; //List of courses in this calendar
-        private ArrayList<CourseEvent> events;
+        private TreeSet<Comparable<Event>> events;
 	private int year; //The year this dwiCalendar represents
 	
 	/**
@@ -23,7 +23,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
 	{
 		year = _y;
                 courses = new TreeSet<Comparable<Course>>();
-                events = new ArrayList<CourseEvent>();
+                events = new TreeSet<Comparable<Event>>();
 	}
 	
 	/**
