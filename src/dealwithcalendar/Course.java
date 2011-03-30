@@ -13,7 +13,6 @@ public class Course implements Comparable<Course> {
     private Calendar start, end; //start and end dates for the course
     private String name; //course name
     private int id, cr; //course ID and the credits it's worth
-    private ArrayList<Event> cEvents;
 
     /**
      * Constructor to init a new course. The params dictate the starting and ending date, earned credits and courseID
@@ -48,17 +47,6 @@ public class Course implements Comparable<Course> {
         this.name = _name;
     }
 
-    /**
-     * Method for adding an event to this course
-     * @param _starttime
-     * @param _endtime
-     * @param _location
-     * @param eventName
-     */
-    public void addCourseEvent(Calendar _starttime, Calendar _endtime, String _location, String eventName) {
-        Event cEvent = new Event (_starttime, _endtime, _location, eventName, id);
-        cEvents.add(cEvent);
-    }
 
     /**
      * Comparable required method for comparing objects

@@ -5,19 +5,33 @@
 
 package dealwithcalendar;
 
+import java.util.ArrayList;
+import java.util.TreeSet;
+
 /**
  *
  * @author Deal With It Productions
  */
 public class Main {
-
+    dwiCalendar currentCalendar;
+    TreeSet<Course> courses;
     /**
      * @param args the command line arguments
      */
+
+    public Main (){
+
+        //This constructor is bullshit, this data would really come from file
+        // 
+        currentCalendar = new dwiCalendar(2011);
+        courses = new TreeSet<Course>();
+    }
+
+
     public static void main(String[] args) {
-        System.out.println("DEAL WITH IT NOOB!");
-        System.out.println("TERVE t:Nyman");
+
         
+
         GUI gui = new GUI();
         /*
         while (true)
