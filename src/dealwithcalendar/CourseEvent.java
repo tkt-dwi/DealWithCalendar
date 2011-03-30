@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 
 
-public class CourseEvent {
+public class CourseEvent implements Comparable<CourseEvent>{
 
     private int day;
     private int starttime;
@@ -62,6 +62,10 @@ public class CourseEvent {
 
     public void setAttending(boolean attending) {
         this.attending = attending;
+    }
+
+    public int compareTo(CourseEvent o) {
+        return 0;
     }
 
     

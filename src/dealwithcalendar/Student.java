@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Student
 {
-	private TreeSet<Comparable<Calendar>> calendars; //list of Calendars specific per year
+	private TreeSet<Comparable<dwiCalendar>> calendars; //list of Calendars specific per year
 	private String name; //Student name
 	private int credits, startingYear, currentYear; //amount of credits, year started studies, current year
 	
@@ -27,8 +27,8 @@ public class Student
 		startingYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR); //get the starting year
 		currentYear = startingYear; //set current year
 		
-		calendars = new TreeSet<Comparable<Calendar>>(); // init the calendar list
-		calendars.add(new Calendar(startingYear)); //add this year's calendar
+		calendars = new TreeSet<Comparable<dwiCalendar>>(); // init the calendar list
+		calendars.add(new dwiCalendar(startingYear)); //add this year's calendar
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class Student
 		if(currentYear != year)
 		{
 			currentYear = year; //update year
-			calendars.add(new Calendar(year)); //add the new calendar
+			calendars.add(new dwiCalendar(year)); //add the new calendar
 		}
 	}
 }
