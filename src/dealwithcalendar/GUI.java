@@ -1,4 +1,9 @@
-
+/*
+ * TODO: Courseview, addcourseview, fix weekView and
+ * week scrolling add save-method and add-event method
+ * 
+ *
+ */
 package dealwithcalendar;
 
 import javax.swing.*;
@@ -43,11 +48,11 @@ public class GUI extends JFrame
      private JMenuItem weekView = new JMenuItem("Viikkonäkymään");
      private JMenuItem monthView = new JMenuItem("Kuukausinäkymään");
      private JMenuItem eventView = new JMenuItem("Lisää tapahtuma");
+     private JMenuItem saveWeek = new JMenuItem("Tallenna viikko");
      private JMenuItem quit = new JMenuItem("Poistu");
         // game mode is a submenu in game menu
      private JMenu courses = new JMenu("Kurssit");
-     private JMenuItem sCoursesView = new JMenuItem("Valitut kurssit");
-     private JMenuItem aCoursesView = new JMenuItem("Kaikki kurssit");
+     private JMenuItem CoursesView = new JMenuItem("Selaa kursseja");
      private JMenuItem addCourseView = new JMenuItem("Lisää kurssi");
 
      // weekNumber indicator
@@ -170,15 +175,10 @@ public class GUI extends JFrame
 
             // courses submenu
 
-            sCoursesView.setBackground(new Color(100,125,150));
-            sCoursesView.setForeground(Color.DARK_GRAY);
-            sCoursesView.addActionListener(this);
-            courses.add(sCoursesView);
-
-            aCoursesView.setBackground(new Color(100,125,150));
-            aCoursesView.setForeground(Color.DARK_GRAY);
-            aCoursesView.addActionListener(this);
-            courses.add(aCoursesView);
+            CoursesView.setBackground(new Color(100,125,150));
+            CoursesView.setForeground(Color.DARK_GRAY);
+            CoursesView.addActionListener(this);
+            courses.add(CoursesView);
 
             addCourseView.setBackground(new Color(100,125,150));
             addCourseView.setForeground(Color.DARK_GRAY);
@@ -205,6 +205,13 @@ public class GUI extends JFrame
         KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         eventView.addActionListener(this);
         Menu.add(eventView);
+
+        saveWeek.setBackground(new Color(100,125,150));
+        saveWeek.setForeground(Color.DARK_GRAY);
+        saveWeek.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        saveWeek.addActionListener(this);
+        Menu.add(saveWeek);
 
         quit.setBackground(new Color(100,125,150));
         quit.setForeground(Color.DARK_GRAY);
@@ -252,8 +259,9 @@ public class GUI extends JFrame
         if (source == quit) System.exit(0);
         if (source == weekView) createWeekView(dummyWeek, 12);
         if (source == monthView) openSaveFileDialog();
-        if (source == sCoursesView) openLoadFileDialog();
-        if (source == aCoursesView) createShowAllCoursesView();
+        if (source == CoursesView) createShowAllCoursesView();
+        if (source == addCourseView) ;
+        if (source == saveWeek) ;
         if (source == bPrev) ;
         if (source == bNext) ;
         
