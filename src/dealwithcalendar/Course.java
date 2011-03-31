@@ -10,6 +10,21 @@ import java.util.*;
  */
 public class Course implements Comparable<Course> {
 
+    /**
+     * TODO: We need information about course's lecture,
+     * test and studygroup times in here, most probably with
+     * information if they are already added in calendar or not
+     * (booleans for each lecture, studygroup and test times separately).
+     *
+     * This helps in getting GUI done in the most well working manner where
+     * one can easily change courses one is attending to afterwards.
+     * In this way if one wants to plan his/her calendar more and changes
+     * attending courses all the time he/she won't have to type the lecture
+     * times every time separately. (and GUI won't give permission to add
+     * lecture times to calendar which are already in there)
+     *
+     */
+
     private Calendar start, end; //start and end dates for the course
     private String name; //course name
     private int id, cr; //course ID and the credits it's worth
