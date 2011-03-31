@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class dwiCalendar implements Comparable<dwiCalendar>
 {
-        private TreeSet<Comparable<Event>> events;
+        private TreeSet<Event> events;
 	private int year; //The year this dwiCalendar represents
 	
 	/**
@@ -21,7 +21,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
 	public dwiCalendar(int _y)
 	{
 		year = _y;
-                events = new TreeSet<Comparable<Event>>();
+                events = new TreeSet<Event>();
 	}
 	public void addEvent(Event a){
 

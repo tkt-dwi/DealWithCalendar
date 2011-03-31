@@ -285,6 +285,8 @@ public class GUI extends JFrame
                b.setFont(new Font("sansserif", Font.PLAIN, 10));
                b.setMargin(margins);
                b.setPreferredSize(new Dimension(80,15));
+               // Testing a fix for button highlighting!
+               b.setRolloverEnabled(false);
                b.addActionListener(this);
 
                calendarEvents[i][j] = -1;
