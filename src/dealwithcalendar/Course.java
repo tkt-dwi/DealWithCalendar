@@ -26,9 +26,7 @@ public class Course implements Comparable<Course> {
      */
 
     private Calendar start, end; //start and end dates for the course
-    private ArrayList<Calendar> lectures;
-    private ArrayList<Calendar> studygroups;
-    private ArrayList<Calendar> tests;
+    private ArrayList<courseEvent> coursetimes;
     private String name; //course name
     private int id, cr; //course ID and the credits it's worth
 
@@ -46,10 +44,9 @@ public class Course implements Comparable<Course> {
         this.name = _name;
         this.id = _id;
         this.cr = _cr;
-        this.lectures = new ArrayList<Calendar>();
-        this.tests = new ArrayList<Calendar>();
-        this.studygroups = new ArrayList<Calendar>();
+        this.coursetimes = new ArrayList<courseEvent>();
     }
+
 
     /**
      * Constructor to init a new course. No credits or courseID used.
@@ -118,23 +115,81 @@ public class Course implements Comparable<Course> {
     public void setStart(Calendar start) {
         this.start = start;
     }
-    public void addLectureTime(Calendar a){
-        lectures.add(a);
+    /**
+     * Method for adding course events such as lectures and studygroups. The type parameter
+     * is either LECTURE or STUDYGROUP, which are defined as static constants in courseEvent
+     * class. The weekday must be one of the weekdays defined in Calendar class. If these
+     * requirements are not fullfilled, the courseEvent will not be added. These courseEvents are used to
+     * generate actual Event objects for dwiCalendar class.
+     * 
+     * @param _type The type of the event, either lecture or a studygroup.
+     * @param _time The time when the event starts.
+     * @param _weekday The weekday when event occurs
+     * @param _duration The duration of the event in minutes
+     * @param _location The location of the event.
+     */
+    public void addCourseEvent(int _type, Calendar _time, int _weekday, int _duration, String _location){
+        if(_type != courseEvent.LECTURE && _type != courseEvent.STUDYGROUP)
+            return;
+        if(_weekday < 1 || _weekday > 7)
+            return;
+
+        coursetimes.add( new courseEvent(_type, _time, _weekday, _duration, _location));
     }
-    public void addStudygroupTime(Calendar a){
-        studygroups.add(a);
+
+    /**
+     * Method for adding exams to the course.
+     * @param _testDate The time and date of the exam
+     * @param _location The location of the exam
+     * @param duration The duration of the exam in minutes
+     */
+    public void addTest(Calendar _testDate, String _location, int duration){
+        coursetimes.add(new courseEvent(courseEvent.TEST, _testDate, 0, duration, _location));
     }
-    public void addTestTime(Calendar a){
-        tests.add(a);
+    /**
+     * Method for generating an ArrayList<Event> filled with Event objects
+     * generated from the data given in the course. If no courseEvents are given,
+     * the method returns null
+     *
+     * TODO: This is still under developement.
+     * 
+     * @return null if no courseEvents are given for this course, otherwise an ArrayList containing the events.
+     */
+    public ArrayList<Event> generateEvents(){
+        if(coursetimes.isEmpty())
+            return null;
+        ArrayList<Event> generatedEvents = new ArrayList<Event>();
+        Iterator<courseEvent> courseEventIterator = coursetimes.iterator();
+        while(courseEventIterator.hasNext()){
+            courseEvent current = courseEventIterator.next();
+            Calendar starttime;
+            Calendar endtime;
+            if(current.getType() == courseEvent.TEST){
+                starttime = current.getTime();
+            }
+        }
+        return generatedEvents;
     }
-    public ArrayList<Calendar> getLectureTimes(){
-        return lectures;
+
+    private Calendar getEndtime(int minutes, Calendar original){
+        Calendar endtime = Calendar.getInstance();
+
+        copyCalendarFields(original, endtime);
+
+        endtime.add(Calendar.MINUTE, minutes);
+
+        return endtime;
     }
-    public ArrayList<Calendar> getStudygroupTimes(){
-        return studygroups;
-    }
-    public ArrayList<Calendar> getTestTimes(){
-        return studygroups;
+
+    private void copyCalendarFields(Calendar original, Calendar endtime) {
+        int originalSecond, originalYear, originalMonth, originalDay, originalHour, originalMinute;
+        originalYear = original.get(Calendar.YEAR);
+        originalMonth = original.get(Calendar.MONTH);
+        originalDay = original.get(Calendar.DATE);
+        originalHour = original.get(Calendar.HOUR_OF_DAY);
+        originalMinute = original.get(Calendar.MINUTE);
+        originalSecond = original.get(Calendar.SECOND);
+        endtime.set(originalYear, originalMonth, originalDay, originalHour, originalMinute, originalSecond);
     }
 }
 
