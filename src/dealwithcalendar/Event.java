@@ -94,6 +94,14 @@ public class Event implements Comparable<Event>{
         return x;
     }
 
+    public boolean equals(Event e){
+
+        return (this.starttime.equals(e.starttime) && this.endtime.equals(e.endtime)
+                && this.location.equalsIgnoreCase(e.location) && this.name.equalsIgnoreCase(e.name)
+                && (this.courseID == e.courseID));
+
+    }
+
 
     
 

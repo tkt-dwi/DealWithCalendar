@@ -5,7 +5,7 @@
 
 package dealwithcalendar;
 
-import java.util.TreeSet;
+import java.util.HashMap;
 
 /**
  *
@@ -13,7 +13,7 @@ import java.util.TreeSet;
  */
 public class Main {
     dwiCalendar currentCalendar;
-    TreeSet<Course> courses;
+    HashMap<Integer, Course> courses;
     /**
      * @param args the command line arguments
      */
@@ -23,7 +23,7 @@ public class Main {
         //This constructor is bullshit, this data would really come from file
         // 
         currentCalendar = new dwiCalendar(2011);
-        courses = new TreeSet<Course>();
+        courses = new HashMap<Integer, Course>();
     }
 
 
@@ -37,6 +37,18 @@ public class Main {
         {}
          * 
          */
+    }
+
+    /*public void addCourse(Calendar startTime, Calendar endTime, ){
+
+    }*/
+
+    public Course getCourse(int courseID){
+        return courses.get(courseID);
+    }
+    private boolean createEvents(Course source){
+
+        return true;
     }
 
 }

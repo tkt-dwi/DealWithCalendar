@@ -26,6 +26,9 @@ public class Course implements Comparable<Course> {
      */
 
     private Calendar start, end; //start and end dates for the course
+    private ArrayList<Calendar> lectures;
+    private ArrayList<Calendar> studygroups;
+    private ArrayList<Calendar> tests;
     private String name; //course name
     private int id, cr; //course ID and the credits it's worth
 
@@ -38,29 +41,32 @@ public class Course implements Comparable<Course> {
      * @param _cr Course credits gained from the course
      */
     public Course(Calendar _start, Calendar _end, String _name, int _id, int _cr) {
-        initializeFields(_start, _end, _name);
-        id = _id;
-        cr = _cr;
+        this.start = _start;
+        this.end = _end;
+        this.name = _name;
+        this.id = _id;
+        this.cr = _cr;
+        this.lectures = new ArrayList<Calendar>();
+        this.tests = new ArrayList<Calendar>();
+        this.studygroups = new ArrayList<Calendar>();
     }
 
     /**
-     * Constructor to init a new course. No credits or courseID used
+     * Constructor to init a new course. No credits or courseID used.
      * @param _start The date when course starts
      * @param _end The date when course ends
      * @param _name
      */
 
+    //Questionable. I'd say that we want to ID all courses, so we can place them on hashmap.
+    //I'll call this DEPRECATED for now.
+    @Deprecated
     public Course(Calendar _start, Calendar _end, String _name) {
-        initializeFields(_start, _end, _name);
-    }
-
-    //Private method for initializing the fields, just avoiding rewriting this for both constructors
-
-    private void initializeFields(Calendar _start, Calendar _end, String _name) {
         this.start = _start;
         this.end = _end;
         this.name = _name;
     }
+
 
 
     /**
@@ -111,6 +117,24 @@ public class Course implements Comparable<Course> {
 
     public void setStart(Calendar start) {
         this.start = start;
+    }
+    public void addLectureTime(Calendar a){
+        lectures.add(a);
+    }
+    public void addStudygroupTime(Calendar a){
+        studygroups.add(a);
+    }
+    public void addTestTime(Calendar a){
+        tests.add(a);
+    }
+    public ArrayList<Calendar> getLectureTimes(){
+        return lectures;
+    }
+    public ArrayList<Calendar> getStudygroupTimes(){
+        return studygroups;
+    }
+    public ArrayList<Calendar> getTestTimes(){
+        return studygroups;
     }
 }
 
