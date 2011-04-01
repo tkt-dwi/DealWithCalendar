@@ -52,3 +52,34 @@ public class Main {
     }
 
 }
+
+/*
+ * TODO: GUI wants atleast these dummies
+ *
+ getWeek(int weekN, int yearN)
+return ArrayList<Event>
+
+getWeek(Calendar date) // palauttaa viikon jolle pvm sijoittuu
+return ArrayList<Event>
+
+changeEvent(Event e, eventproperty ep) // to all event "properties"
+return void / changer Event e
+
+add Event(all event properties in that order they appear in Event-class)
+return void/ Event
+
+changeCourse(courseID/Course?, courseproperty) // to all course"properties"
+return void/ changed Course
+
+addCourse(all course properties in that order they appear in Course-class)
+return Course
+
+addCourseEvent(all courseEvent properties...)
+return void / CourseEvent
+
+getCourse()
+return …
+
+getCourseList/HashMap()
+return....
+ */
