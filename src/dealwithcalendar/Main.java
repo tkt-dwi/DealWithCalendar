@@ -5,6 +5,8 @@
 
 package dealwithcalendar;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -51,7 +53,86 @@ public class Main {
         return true;
     }
 
+    /**
+     * Tools to handle single events and to create one
+     */
+     public void addEvent(Calendar starttime, Calendar endtime, int courseID,
+                          String location, String name, boolean attending){
+        Event e = new Event(starttime, endtime, location, name, courseID);
+        currentCalendar.addEvent(e);
+    }
+
+    public void changeEventStarttime(Event e, Calendar starttime){
+        e.setStarttime(starttime);
+    }
+
+
+    public void changeEventEndtime(Event e, Calendar endtime){
+        e.setEndtime(endtime);
+    }
+
+    public void changeEventLocation(Event e, String location){
+        e.setLocation(location);
+    }
+
+    public void changeEventName(Event e, String name){
+        e.setLocation(name);
+    }
+
+    public void changeEventAttending(Event e, boolean attending){
+        e.setAttending(attending);
+    }
+
+
+    /**
+     * Tools to handle single course or create one
+     */
+    public void addCourse(Calendar starttime, Calendar endtime, String name,
+                           int ID, int credits){
+        Course c = new Course(starttime, endtime, name, ID, credits);
+        courses.put(ID, c);
+    }
+
+    public void addCourseEvent(Course id, int type, Calendar time, int week, int duration,
+                                String location){
+        id.addCourseEvent(type, time, week, duration, location);
+
+    }
+
+    public void changeCourseStart(int id, Calendar starttime){
+        courses.get(id).setStart(starttime);
+    }
+
+    public void changeCourseEnd(int id, Calendar endtime){
+        courses.get(id).setStart(endtime);
+    }
+
+    public void changeCourseName(int id, String name){
+        courses.get(id).setName(name);
+    }
+
+    public void changeCourseCreditpoints(int id, int cr){
+        courses.get(id).setCr(cr);
+    }
+
+    public HashMap getCourses(){
+        return courses;
+    }
+
+    public Course getACourse(int id){
+        return courses.get(id);
+    }
+//
+//     Likely useless, thus commented out ATM
+//
+//     public void changeCourseId(int id, int ident){
+//         courses.get(id).setCr(ident);
+//     }
+
+
 }
+
+
 
 /*
  * TODO: GUI wants atleast these dummies
@@ -62,24 +143,4 @@ return ArrayList<Event>
 getWeek(Calendar date) // palauttaa viikon jolle pvm sijoittuu
 return ArrayList<Event>
 
-changeEvent(Event e, eventproperty ep) // to all event "properties"
-return void / changer Event e
-
-add Event(all event properties in that order they appear in Event-class)
-return void/ Event
-
-changeCourse(courseID/Course?, courseproperty) // to all course"properties"
-return void/ changed Course
-
-addCourse(all course properties in that order they appear in Course-class)
-return Course
-
-addCourseEvent(all courseEvent properties...)
-return void / CourseEvent
-
-getCourse()
-return …
-
-getCourseList/HashMap()
-return....
  */
