@@ -42,7 +42,10 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             Iterator<Event> eventIterator = events.iterator();
             while(eventIterator.hasNext()){
                 Event current = eventIterator.next();
-                if(current.getStarttime().compareTo(start) >= 0){
+                if(current.getStarttime().compareTo(start) >= 0 && current.getStarttime().compareTo(end) < 0){
+                    /* Debug information, yeah!
+                    System.out.println("FOUND STARTEVENT FUCK YEAH\nTime:");
+                    DebugPrintForCalendar(current.getStarttime());*/
                     startEvent = current;
                     break;
                 }
@@ -53,6 +56,10 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             while(eventIterator.hasNext()){
                 Event current = eventIterator.next();
                 if(current.getEndtime().compareTo(end) > 0){
+                    /* Debug information, YEAH!
+                    System.out.println("FOUND ENDEVENT FUCK YEAH\nTime:");
+                    DebugPrintForCalendar(current.getEndtime());
+                    */
                     endEvent = current;
                     break;
                 }
@@ -68,7 +75,56 @@ public class dwiCalendar implements Comparable<dwiCalendar>
            return returnArray;
 
         }
+        /**
+         * Getter for events according to a given year and week
+         *
+         * @param year The year in question
+         * @param week the week in question
+         * @return ArrayList<Event> object containing the events associated with the selected week.
+         */
+        public ArrayList<Event> getEventsOfWeek(int year, int week){
+            Calendar startOfWeek = Calendar.getInstance();
+            Calendar endOfWeek = Calendar.getInstance();
 
+            startOfWeek.set(Calendar.YEAR, year);
+            startOfWeek.set(Calendar.WEEK_OF_YEAR, week);
+            startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            startOfWeek.set(Calendar.HOUR_OF_DAY, 0);
+            startOfWeek.set(Calendar.MINUTE, 1);
+
+            //Debugging info, yay
+            System.out.println("StartOfWeek:");
+            DebugPrintForCalendar(startOfWeek);
+
+            endOfWeek.set(Calendar.YEAR, year);
+            endOfWeek.set(Calendar.WEEK_OF_YEAR, week);
+            endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+            endOfWeek.set(Calendar.HOUR_OF_DAY, 23);
+            endOfWeek.set(Calendar.MINUTE, 59);
+
+            System.out.println("endOfWeek");
+            DebugPrintForCalendar(endOfWeek);
+
+            return getEvents(startOfWeek, endOfWeek);
+        }
+
+    private void DebugPrintForCalendar(Calendar startOfWeek) {
+        System.out.println("YEAR: " + startOfWeek.get(Calendar.YEAR));
+        System.out.println("WEEK: " + startOfWeek.get(Calendar.WEEK_OF_YEAR));
+        System.out.println("MONTH: " + startOfWeek.get(Calendar.MONTH));
+        System.out.println("DAY: " + startOfWeek.get(Calendar.DATE));
+        System.out.println("HOUR: " + startOfWeek.get(Calendar.HOUR_OF_DAY));
+        System.out.println("MINUTE: " + startOfWeek.get(Calendar.MINUTE));
+    }
+
+        public ArrayList<Event> getEventsOfWeek(Calendar dayInWeek){
+            return getEventsOfWeek(dayInWeek.get(Calendar.YEAR), dayInWeek.get(Calendar.WEEK_OF_YEAR));
+        }
+        /**
+         * getter for the whole list of events
+         * @return ArrayList containing all events
+         */
+        
         public ArrayList<Event> getEvents(){
             ArrayList<Event> returnArray = new ArrayList<Event>();
             returnArray.addAll(events);

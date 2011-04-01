@@ -97,38 +97,86 @@ public class dwiCalendarTest {
      */
     @Test
     public void partialEventsTest(){
+
         dwiCalendar testCalendar = new dwiCalendar(2011);
+
         Event first = createDummyEvent(2011, 1, 2);
         Event second = createDummyEvent(2011, 3, 4);
         Event third = createDummyEvent(2011, 5, 6);
         Event fourth = createDummyEvent(2011, 7, 8);
+        Event fifth = createDummyEvent(2011, 9, 10);
+
+        testCalendar.addEvent(first);
+        testCalendar.addEvent(second);
+        testCalendar.addEvent(third);
+        testCalendar.addEvent(fourth);
+        testCalendar.addEvent(fifth);
+
+        Calendar startDate = Calendar.getInstance();
+        Calendar endDate = Calendar.getInstance();
+
+        startDate.set(2011, 0, 2, 0, 0, 0);
+        endDate.set(2011, 0, 8, 0, 0, 0);
+
+        ArrayList<Event> eventArray = testCalendar.getEvents(startDate, endDate);
+
+        // The getEvents() should return second and third events.
+        assertFalse(eventArray.isEmpty());
+        assertEquals(3, eventArray.size());
+        assertEquals(second, eventArray.get(0));
+        assertEquals(third, eventArray.get(1));
+        assertEquals(fourth, eventArray.get(2));
+
+        startDate.set(2011, 0, 7, 0, 0, 0);
+        endDate.set(2011, 0, 20, 0, 0, 0);
+
+        eventArray = testCalendar.getEvents(startDate, endDate);
+
+        assertFalse(eventArray.isEmpty());
+        assertEquals(2, eventArray.size());
+        assertEquals(fourth, eventArray.get(0));
+        assertEquals(fifth, eventArray.get(1));
+
+    }
+
+    @Test
+    public void weeklyEventTest(){
+        dwiCalendar testCalendar = new dwiCalendar(2011);
+
+        Event first = createDummyEvent(2011, 1, 2);
+        Event second = createDummyEvent(2011, 4, 5);
+        Event third = createDummyEvent(2011, 6, 7);
+        Event fourth = createDummyEvent(2011, 10, 11);
 
         testCalendar.addEvent(first);
         testCalendar.addEvent(second);
         testCalendar.addEvent(third);
         testCalendar.addEvent(fourth);
 
-        Calendar startDate = Calendar.getInstance();
-        Calendar endDate = Calendar.getInstance();
 
-        startDate.set(2011, 1, 2, 0, 0, 0);
-        endDate.set(2011, 1, 6, 0, 0, 0);
+        ArrayList <Event> Week1List = testCalendar.getEventsOfWeek(2011, 1);
 
-        ArrayList<Event> eventArray = testCalendar.getEvents(startDate, endDate);
+        assertFalse(Week1List.isEmpty());
+        assertEquals(2, Week1List.size());
+        assertEquals(second, Week1List.get(0));
+        assertEquals(third, Week1List.get(1));
 
-        // The getEvents() should return second and third events.
-        assertFalse(eventArray.isEmpty());
-        assertEquals(2, eventArray.size());
-        assertEquals(second, eventArray.get(0));
-        assertEquals(third, eventArray.get(1));
+        Calendar dateFromWeek1 = Calendar.getInstance();
+        dateFromWeek1.set(2011, 0, 8, 0, 0);
 
+        Week1List = testCalendar.getEventsOfWeek(dateFromWeek1);
+
+        assertFalse(Week1List.isEmpty());
+        assertEquals(2, Week1List.size());
+        assertEquals(second, Week1List.get(0));
+        assertEquals(third, Week1List.get(1));
     }
 
     private Event createDummyEvent(int year, int startday, int endday){
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
-        start.set(year, 1, startday, 0, 0, 0);
-        end.set(year, 1, endday, 0, 0, 0);
+        start.set(year, 0, startday, 0, 0, 0);
+        end.set(year, 0, endday, 0, 0, 0);
         return new Event(start, end, "Gurula", "DummyCourse");
     }
 
