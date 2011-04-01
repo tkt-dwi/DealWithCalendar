@@ -67,16 +67,16 @@ public class Event implements Comparable<Event>{
         return starttime;
     }
 
-    public void setStarttime(int _year, int _day, int _month, int _starthour) {
-        starttime.set(_year, _month, _day, _starthour, 0);
+    public void setStarttime(Calendar starttime) {
+        this.starttime = starttime;
     }
 
     public Calendar getEndtime(){
         return endtime;
     }
 
-    public void setEndtime(int _year, int _day, int _month, int _endhour){
-        endtime.set(_year, _month, _day, _endhour, 0);
+    public void setEndtime(Calendar endtime) {
+        this.endtime = endtime;
     }
 
     public boolean isAttending() {
