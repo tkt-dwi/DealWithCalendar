@@ -43,7 +43,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             while(eventIterator.hasNext()){
                 Event current = eventIterator.next();
                 if(current.getStarttime().compareTo(start) >= 0 && current.getStarttime().compareTo(end) < 0){
-                    /* Debug information, yeah!
+                    /*Debug information, yeah!
                     System.out.println("FOUND STARTEVENT FUCK YEAH\nTime:");
                     DebugPrintForCalendar(current.getStarttime());*/
                     startEvent = current;
@@ -56,10 +56,10 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             while(eventIterator.hasNext()){
                 Event current = eventIterator.next();
                 if(current.getEndtime().compareTo(end) > 0){
-                    /* Debug information, YEAH!
+                    /*Debug information, YEAH!
                     System.out.println("FOUND ENDEVENT FUCK YEAH\nTime:");
-                    DebugPrintForCalendar(current.getEndtime());
-                    */
+                    DebugPrintForCalendar(current.getEndtime());*/
+                    
                     endEvent = current;
                     break;
                 }
@@ -91,6 +91,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             startOfWeek.set(Calendar.HOUR_OF_DAY, 0);
             startOfWeek.set(Calendar.MINUTE, 1);
+            startOfWeek.set(Calendar.SECOND, 0);
 
             //Debugging info, yay
             //System.out.println("StartOfWeek:");
@@ -101,6 +102,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             endOfWeek.set(Calendar.HOUR_OF_DAY, 23);
             endOfWeek.set(Calendar.MINUTE, 59);
+            endOfWeek.set(Calendar.SECOND, 59);
 
             //System.out.println("endOfWeek");
             //DebugPrintForCalendar(endOfWeek);

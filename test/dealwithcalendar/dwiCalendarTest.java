@@ -128,19 +128,23 @@ public class dwiCalendarTest {
         assertEquals(fourth, eventArray.get(2));
 
         startDate.set(2011, 0, 7, 0, 0, 0);
+        startDate.set(Calendar.MILLISECOND, 0);
         endDate.set(2011, 0, 20, 0, 0, 0);
+        endDate.set(Calendar.MILLISECOND, 0);
 
+        System.out.println("-----Problem-----");
         eventArray = testCalendar.getEvents(startDate, endDate);
-
         assertFalse(eventArray.isEmpty());
         assertEquals(2, eventArray.size());
         assertEquals(fourth, eventArray.get(0));
         assertEquals(fifth, eventArray.get(1));
+        System.out.println("-----EndProblem -----");
 
     }
 
     @Test
     public void weeklyEventTest(){
+        System.out.println("-----StartOfWeeklyTests-----");
         dwiCalendar testCalendar = new dwiCalendar(2011);
 
         Event first = createDummyEvent(2011, 1, 2);
@@ -176,7 +180,9 @@ public class dwiCalendarTest {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
         start.set(year, 0, startday, 0, 0, 0);
+        start.set(Calendar.MILLISECOND, 0);
         end.set(year, 0, endday, 0, 0, 0);
+        end.set(Calendar.MILLISECOND, 0);
         return new Event(start, end, "Gurula", "DummyCourse");
     }
 

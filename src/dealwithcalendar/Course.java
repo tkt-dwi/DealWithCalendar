@@ -143,7 +143,7 @@ public class Course implements Comparable<Course> {
      * @param _location The location of the exam
      * @param duration The duration of the exam in minutes
      */
-    public void addTest(Calendar _testDate, String _location, int duration){
+    public void addExam(Calendar _testDate, String _location, int duration){
         coursetimes.add(new courseEvent(courseEvent.TEST, _testDate, 0, duration, _location));
     }
     /**
@@ -166,16 +166,18 @@ public class Course implements Comparable<Course> {
             Calendar endtime = null;
             String eventName = null;
             if(current.getType() == courseEvent.TEST){
-                starttime = current.getTime();
+                // System.out.println("FOUND TEST!");
+                starttime = (Calendar)current.getTime().clone();
                 endtime = getEndtime(current.getDuration(), starttime);
                 eventName = name + " exam";
                 Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
                 generatedEvents.add(generatedTest);
             }
             else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP){
-                Calendar weeklyDates = start;
+                // System.out.println("FOUND LECTURE/STUDYGROUP!");
+                Calendar weeklyDates = (Calendar)start.clone();
                 findFirstMatchingWeekday(weeklyDates, current);
-                while(weeklyDates.compareTo(endtime) <= 0){
+                while(weeklyDates.compareTo(end) <= 0){
                     starttime = (Calendar)weeklyDates.clone();
                     starttime.set(Calendar.HOUR_OF_DAY, current.getTime().get(Calendar.HOUR_OF_DAY));
                     starttime.set(Calendar.MINUTE, current.getTime().get(Calendar.MINUTE));
@@ -183,8 +185,11 @@ public class Course implements Comparable<Course> {
                     endtime = getEndtime(current.getDuration(), starttime);
                     if(current.getType() == courseEvent.LECTURE){
                         eventName = name + " lecture";
-                    }else
+                        // System.out.println("Creating lecture");
+                    }else{
                         eventName = name + " studygroup";
+                        // System.out.println("Creating studygroup");
+                    }
                     Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
                     generatedEvents.add(generatedTest);
                     weeklyDates.add(Calendar.DATE, 7);
