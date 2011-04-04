@@ -14,8 +14,8 @@ import java.util.HashMap;
  * @author Deal With It Productions
  */
 public class Main {
-    dwiCalendar currentCalendar;
-    HashMap<Integer, Course> courses;
+    private dwiCalendar currentCalendar;
+    private HashMap<Integer, Course> courses;
     /**
      * @param args the command line arguments
      */
