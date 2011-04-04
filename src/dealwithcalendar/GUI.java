@@ -25,9 +25,9 @@ import java.awt.Dimension;
 public class GUI extends JFrame
                             implements ActionListener {
 
-     int weekdays = 7;
-     int hours = 24;
-     int months = 12;
+     static int WEEKDAYS = 7;
+     static int HOURS = 24;
+     static int MONTHS = 12;
      JButton[][] calendarButtons; // not private because of tests
      int[][] calendarEvents; // array to store week events
      JPanel calendarWhole; // not private because of tests
@@ -50,13 +50,13 @@ public class GUI extends JFrame
      private JMenuItem eventView = new JMenuItem("Lisää tapahtuma");
      private JMenuItem saveWeek = new JMenuItem("Tallenna viikko");
      private JMenuItem quit = new JMenuItem("Poistu");
-        // game mode is a submenu in game menu
+        // courses is submenu in main menu
      private JMenu courses = new JMenu("Kurssit");
      private JMenuItem CoursesView = new JMenuItem("Selaa kursseja");
      private JMenuItem addCourseView = new JMenuItem("Lisää kurssi");
 
      // weekNumber indicator
-     JTextField weekNumber = new JTextField("VIIKKO 11");
+     JTextField weekNumber = new JTextField("VIIKKO ");
 
      // dummy week for prototype
      String[][] dummyWeek = {{"1", "8", "10", "Ohtu", "CK111", ""},
@@ -65,6 +65,8 @@ public class GUI extends JFrame
      String[][] dummyWeek2 = {{"2", "8", "10", "Ohtu", "CK111", ""},
                              {"3", "10", "14", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
 
+     String[] dc = {"Ohjelmistotuotanto", "Rinnakkaisohjelmointi", "Ohjelmoinnin perusteet"};
+
      // event infos
      private String eventEmpty ="Kurssi:  \t \n" +
                                 "Päivämäärä:   \t \n" +
@@ -72,7 +74,7 @@ public class GUI extends JFrame
                                 "Paikka: \n" +
                                 "Omat merkinnät: \n";
 
-     // for calendar view
+     // 
      private String[] dayNames = {  "Maanantai",
                                     "Tiistai",
                                     "Keskiviikko",
@@ -81,29 +83,51 @@ public class GUI extends JFrame
                                     "Lauantai",
                                     "Sunnuntai"};
 
+     private String[] hrs = {   "0:00", "1:00", "2:00", "3:00", "4:00", "5:00",
+                                "6:00", "7:00", "8:00", "9:00", "10:00", "11:00",
+                                "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+                                "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
+
      // text area and panel for showing event info details
      private JTextArea eventProperties = new JTextArea(eventEmpty, 30, 30);
      private JPanel eventInfo = new JPanel(new GridLayout(1,2));
      
-     // different panels for constructing UI
+     // different panels, boxes, etc. for constructing UI
+
+     // week Calendar
      JScrollPane calendarScrollPane;
      private JPanel weekScroll = new JPanel(new BorderLayout(1,3));
-     private JPanel upperLeftUI = new JPanel(new BorderLayout());
+
+     // main UI contianers
+     private JPanel upperLeftUI = new JPanel(new BorderLayout());     
      private JPanel mainLeft = new JPanel(new BorderLayout());
      private JPanel rightUIPanel = new JPanel(new BorderLayout());
      private JPanel menuPanel = new JPanel(new BorderLayout());
      private JPanel mainUI = new JPanel(new FlowLayout());
      private JPanel mainRight = new JPanel(new BorderLayout());
      private JPanel wholeGUI = new JPanel(new BorderLayout());
+
+     // courses view
+     private JComboBox pickDay = new JComboBox(dayNames);
+     private JComboBox pickHour = new JComboBox(hrs);
+     private JCheckBox insertToCalendar;
+     private JComboBox pickCourse = new JComboBox(dc);
+     private JButton inspectCourse;
+     private JPanel courseViewMain = new JPanel(new BorderLayout());
+     private JPanel courseViewUpper = new JPanel(new GridLayout(1,3));
+     private JPanel courseViewLower = new JPanel(new GridLayout(10, 5));
+
     
     /**
      * Constructor to create GUI for calendar
      */
-    public GUI() {
+    public GUI(Main main) {
         
         UIManager.put("Button.disabledText", Color.WHITE);
 
-        // GENERATE weekNumber marker and calendarGrid for standard week view
+        // CONSTRUCT STANDARD WEEK VIEW
+
+        // constructE weekNumber marker and calendarButtons for standard week view
         weekNumber.setFont(new Font("sansserif", Font.BOLD, 25));
         weekNumber.setBackground(new Color(100,125,150, 200));
         weekNumber.setHorizontalAlignment(0);
@@ -113,9 +137,10 @@ public class GUI extends JFrame
         bNext.setFont(new Font("sansserif", Font.BOLD, 25));
         bNext.setBackground(new Color(100,125,150, 200));
         
-        calendarWhole = new JPanel(new GridLayout(hours,weekdays));
-        calendarButtons = new JButton[hours][weekdays];
-        calendarEvents = new int[hours][weekdays];
+        calendarWhole = new JPanel(new GridLayout(HOURS,WEEKDAYS));
+        calendarButtons = new JButton[HOURS][WEEKDAYS];
+        calendarEvents = new int[HOURS][WEEKDAYS];
+        // make calendar view scrollable (not necessary?)
         calendarScrollPane = new JScrollPane(calendarWhole);
         calendarScrollPane.setPreferredSize(new Dimension(650, 400));
 
@@ -124,9 +149,9 @@ public class GUI extends JFrame
         weekScroll.add("East", bNext);
         upperLeftUI.add("North", weekScroll);
 
-        // create standard week view
-        for (int i = 0; i < hours; i++) {
-            for (int j = 0; j < weekdays; j++) {
+        // create standard week view, map JButtons and events into arrays
+        for (int i = 0; i < HOURS; i++) {
+            for (int j = 0; j < WEEKDAYS; j++) {
                b = new JButton("   ");
                b.setBackground(new Color(100,125,150, 0));
                b.setFont(new Font("sansserif", Font.PLAIN, 10));
@@ -141,27 +166,56 @@ public class GUI extends JFrame
                calendarWhole.add(b);
             }
         }
-
+        // FIXME: get current week's events in here
         createWeekView(dummyWeek, 12);
 
-        // make calendar view scrollable (not necessary?)
-
+        // add week view as default view into GUI.mainLeft
         mainLeft.add("North", upperLeftUI);
         mainLeft.add("South", calendarScrollPane);
 
+        // construct container for event info's
         eventProperties.setFont(new Font("sansserif", Font.BOLD, 12));
         eventProperties.setBackground(new Color(100,125,150, 100));
         eventProperties.setForeground(new Color(0,0,0));
         eventProperties.setEditable(false);
-
         eventInfo.add(eventProperties);
-      
-        rightUIPanel.add("North", eventInfo);
 
+        // construct default view of right side of UI
+        rightUIPanel.add("North", eventInfo);
         mainRight.add("North", rightUIPanel);
 
         mainUI.add(mainLeft);
         mainUI.add(mainRight);
+
+        // CONSTRUCT COURSES VIEW
+
+        pickDay = new JComboBox(dayNames);
+        pickHour = new JComboBox(hrs);
+        insertToCalendar = new JCheckBox();
+        pickCourse = new JComboBox(dc);
+        pickCourse.setPreferredSize(new Dimension(200, 20));
+        //pickCourse.addActionListener(this);
+        pickDay.addActionListener(this);
+        pickHour.addActionListener(this);
+
+
+        // dummy courses
+        inspectCourse = new JButton("Tarkastele kurssia");
+        inspectCourse.setBackground(new Color(100,125,150, 0));
+        inspectCourse.setFont(new Font("sansserif", Font.PLAIN, 15));
+        inspectCourse.setMargin(margins);
+        inspectCourse.setPreferredSize(new Dimension(100,20));
+        inspectCourse.addActionListener(this);
+
+
+        courseViewUpper.add(pickCourse);
+        courseViewUpper.add(inspectCourse);
+        courseViewMain.add("North", courseViewUpper);
+
+        pickHour.setSelectedIndex(12);
+
+
+
 
         // GENERATE JMENUBAR AND IT'S MENUS        
         
@@ -265,14 +319,14 @@ public class GUI extends JFrame
         if (source == quit) System.exit(0);
         if (source == weekView) createWeekView(dummyWeek2, 13);
         if (source == monthView) openSaveFileDialog();
-        if (source == CoursesView) createShowAllCoursesView();
+        if (source == CoursesView) createCoursesView();
         if (source == addCourseView) ;
         if (source == saveWeek) ;
         if (source == bPrev) ;
         if (source == bNext) ;
         
-        for (byte i = 0; i < hours ; i++) {
-            for (byte j = 0; j < weekdays; j++) {
+        for (byte i = 0; i < HOURS ; i++) {
+            for (byte j = 0; j < WEEKDAYS; j++) {
                 if (source == calendarButtons[i][j]) {
                     if (calendarEvents[i][j] >= 0)
                         updateEventInfo(dummyWeek2[calendarEvents[i][j]]);
@@ -280,17 +334,21 @@ public class GUI extends JFrame
                 }
             }
         }
+        if (source == inspectCourse);
+
     }
 
     public void createWeekView(String[][] weekEvents, int wNumber) {
 
+        mainLeft.removeAll();
+        mainRight.removeAll();
         weekNumber.setText("Viikko " +Integer.toString(wNumber));
         int eventDay = 0;
         int eventStart = 0;
         int eventEnd = 0;
 
-        for (int i = 0; i < hours; i++) {
-            for (int j = 0; j < weekdays; j++) {
+        for (int i = 0; i < HOURS; i++) {
+            for (int j = 0; j < WEEKDAYS; j++) {
                calendarButtons[i][j].setText("    ");
                calendarButtons[i][j].setBackground(new Color(100,125,150, 0));
                calendarEvents[i][j] = -1;
@@ -307,17 +365,20 @@ public class GUI extends JFrame
                 calendarEvents[j][eventDay] = i;
             }
         }
-        
+        upperLeftUI.removeAll();
+        upperLeftUI.add("North", weekScroll);
+        mainRight.add("North", rightUIPanel);
         mainLeft.add("North", upperLeftUI);
         mainLeft.add("South", calendarScrollPane);
         repaint();
     }
 
-    public void createShowAllCoursesView() {
+    public void createCoursesView() {
+        mainRight.removeAll();
         mainLeft.removeAll();
 
-
-        
+        pickCourse = new JComboBox(dc);
+        mainLeft.add(courseViewMain);
         repaint();
     }
 
@@ -418,8 +479,8 @@ public class GUI extends JFrame
      * enables them and sets background color back to Color.WHITE.
      */
     private void clearGUIgrid() {
-         for (int i = 0; i < hours ; i++) {
-           for (int j = 0; j < weekdays; j++) {
+         for (int i = 0; i < HOURS ; i++) {
+           for (int j = 0; j < WEEKDAYS; j++) {
                b = calendarButtons[i][j];
                b.setText("   ");
                b.setEnabled(true);
