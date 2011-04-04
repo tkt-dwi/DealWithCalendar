@@ -93,8 +93,8 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             startOfWeek.set(Calendar.MINUTE, 1);
 
             //Debugging info, yay
-            System.out.println("StartOfWeek:");
-            DebugPrintForCalendar(startOfWeek);
+            //System.out.println("StartOfWeek:");
+            //DebugPrintForCalendar(startOfWeek);
 
             endOfWeek.set(Calendar.YEAR, year);
             endOfWeek.set(Calendar.WEEK_OF_YEAR, week);
@@ -102,8 +102,8 @@ public class dwiCalendar implements Comparable<dwiCalendar>
             endOfWeek.set(Calendar.HOUR_OF_DAY, 23);
             endOfWeek.set(Calendar.MINUTE, 59);
 
-            System.out.println("endOfWeek");
-            DebugPrintForCalendar(endOfWeek);
+            //System.out.println("endOfWeek");
+            //DebugPrintForCalendar(endOfWeek);
 
             return getEvents(startOfWeek, endOfWeek);
         }

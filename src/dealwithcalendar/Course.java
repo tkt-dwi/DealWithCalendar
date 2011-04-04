@@ -162,34 +162,54 @@ public class Course implements Comparable<Course> {
         Iterator<courseEvent> courseEventIterator = coursetimes.iterator();
         while(courseEventIterator.hasNext()){
             courseEvent current = courseEventIterator.next();
-            Calendar starttime;
-            Calendar endtime;
+            Calendar starttime = null;
+            Calendar endtime = null;
+            String eventName = null;
             if(current.getType() == courseEvent.TEST){
                 starttime = current.getTime();
+                endtime = getEndtime(current.getDuration(), starttime);
+                eventName = name + " exam";
+                Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
+                generatedEvents.add(generatedTest);
             }
+            else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP){
+                Calendar weeklyDates = start;
+                findFirstMatchingWeekday(weeklyDates, current);
+                while(weeklyDates.compareTo(endtime) <= 0){
+                    starttime = (Calendar)weeklyDates.clone();
+                    starttime.set(Calendar.HOUR_OF_DAY, current.getTime().get(Calendar.HOUR_OF_DAY));
+                    starttime.set(Calendar.MINUTE, current.getTime().get(Calendar.MINUTE));
+                    starttime.set(Calendar.SECOND, current.getTime().get(Calendar.SECOND));
+                    endtime = getEndtime(current.getDuration(), starttime);
+                    if(current.getType() == courseEvent.LECTURE){
+                        eventName = name + " lecture";
+                    }else
+                        eventName = name + " studygroup";
+                    Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
+                    generatedEvents.add(generatedTest);
+                    weeklyDates.add(Calendar.DATE, 7);
+                }
+            }
+
         }
-        return generatedEvents;
+        if(generatedEvents.isEmpty())
+            return null;
+        else
+            return generatedEvents;
+    }
+
+    private void findFirstMatchingWeekday(Calendar weeklyDates, courseEvent current) {
+        while (weeklyDates.get(Calendar.DAY_OF_WEEK) != current.getWeekday()) {
+            weeklyDates.add(Calendar.DATE, 1);
+        }
     }
 
     private Calendar getEndtime(int minutes, Calendar original){
-        Calendar endtime = Calendar.getInstance();
-
-        copyCalendarFields(original, endtime);
+        Calendar endtime = (Calendar)original.clone();
 
         endtime.add(Calendar.MINUTE, minutes);
 
         return endtime;
-    }
-
-    private void copyCalendarFields(Calendar original, Calendar endtime) {
-        int originalSecond, originalYear, originalMonth, originalDay, originalHour, originalMinute;
-        originalYear = original.get(Calendar.YEAR);
-        originalMonth = original.get(Calendar.MONTH);
-        originalDay = original.get(Calendar.DATE);
-        originalHour = original.get(Calendar.HOUR_OF_DAY);
-        originalMinute = original.get(Calendar.MINUTE);
-        originalSecond = original.get(Calendar.SECOND);
-        endtime.set(originalYear, originalMonth, originalDay, originalHour, originalMinute, originalSecond);
     }
 }
 
