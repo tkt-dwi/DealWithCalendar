@@ -87,6 +87,10 @@ public class Event implements Comparable<Event>{
         this.attending = attending;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public int compareTo(Event o) {
         int x = this.starttime.compareTo(o.starttime);
         if(x == 0)
