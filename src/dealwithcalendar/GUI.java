@@ -29,7 +29,7 @@ public class GUI extends JFrame
      int hours = 24;
      int months = 12;
      JButton[][] calendarButtons; // not private because of tests
-     int[][] calendarEvents;
+     int[][] calendarEvents; // array to store week events
      JPanel calendarWhole; // not private because of tests
      private Insets margins = new Insets(0,0,0,0); // insets for calendarButtons
 
@@ -61,6 +61,9 @@ public class GUI extends JFrame
      // dummy week for prototype
      String[][] dummyWeek = {{"1", "8", "10", "Ohtu", "CK111", ""},
                              {"2", "10", "12", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
+
+     String[][] dummyWeek2 = {{"2", "8", "10", "Ohtu", "CK111", ""},
+                             {"3", "10", "14", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
 
      // event infos
      private String eventEmpty ="Kurssi:  \t \n" +
@@ -97,17 +100,7 @@ public class GUI extends JFrame
      * Constructor to create GUI for calendar
      */
     public GUI() {
-        //Look and feel
-        /*
-		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
-		catch (ClassNotFoundException e) {}
-		catch (InstantiationException e) {}
-		catch (IllegalAccessException e) {}
-		catch (UnsupportedLookAndFeelException e) {}
-         * 
-         */
-
-
+        
         UIManager.put("Button.disabledText", Color.WHITE);
 
         // GENERATE weekNumber marker and calendarGrid for standard week view
@@ -126,19 +119,32 @@ public class GUI extends JFrame
         calendarScrollPane = new JScrollPane(calendarWhole);
         calendarScrollPane.setPreferredSize(new Dimension(650, 400));
 
-        // create prototype week view
-        createWeekView(dummyWeek, 12);
-
-        // make calendar view scrollable (not necessary?)
-       
-        
-
-
-
         weekScroll.add("West", bPrev);
         weekScroll.add(weekNumber);
         weekScroll.add("East", bNext);
         upperLeftUI.add("North", weekScroll);
+
+        // create standard week view
+        for (int i = 0; i < hours; i++) {
+            for (int j = 0; j < weekdays; j++) {
+               b = new JButton("   ");
+               b.setBackground(new Color(100,125,150, 0));
+               b.setFont(new Font("sansserif", Font.PLAIN, 10));
+               b.setMargin(margins);
+               b.setPreferredSize(new Dimension(80,15));
+               // Testing a fix for button highlighting!
+               b.setRolloverEnabled(false);
+               b.addActionListener(this);
+
+               calendarEvents[i][j] = -1;
+               calendarButtons[i][j] = b;
+               calendarWhole.add(b);
+            }
+        }
+
+        createWeekView(dummyWeek, 12);
+
+        // make calendar view scrollable (not necessary?)
 
         mainLeft.add("North", upperLeftUI);
         mainLeft.add("South", calendarScrollPane);
@@ -257,7 +263,7 @@ public class GUI extends JFrame
         Object source = act.getSource();
 
         if (source == quit) System.exit(0);
-        if (source == weekView) createWeekView(dummyWeek, 12);
+        if (source == weekView) createWeekView(dummyWeek2, 13);
         if (source == monthView) openSaveFileDialog();
         if (source == CoursesView) createShowAllCoursesView();
         if (source == addCourseView) ;
@@ -269,7 +275,7 @@ public class GUI extends JFrame
             for (byte j = 0; j < weekdays; j++) {
                 if (source == calendarButtons[i][j]) {
                     if (calendarEvents[i][j] >= 0)
-                        updateEventInfo(dummyWeek[calendarEvents[i][j]]);
+                        updateEventInfo(dummyWeek2[calendarEvents[i][j]]);
                     else { openInfoWindow(); }
                 }
             }
@@ -282,24 +288,12 @@ public class GUI extends JFrame
         int eventDay = 0;
         int eventStart = 0;
         int eventEnd = 0;
-        calendarButtons = new JButton[hours][weekdays];
-        calendarEvents = new int[hours][weekdays];
-        calendarWhole.removeAll();
 
         for (int i = 0; i < hours; i++) {
             for (int j = 0; j < weekdays; j++) {
-               b = new JButton("   ");
-               b.setBackground(new Color(100,125,150, 0));
-               b.setFont(new Font("sansserif", Font.PLAIN, 10));
-               b.setMargin(margins);
-               b.setPreferredSize(new Dimension(80,15));
-               // Testing a fix for button highlighting!
-               b.setRolloverEnabled(false);
-               b.addActionListener(this);
-
+               calendarButtons[i][j].setText("    ");
+               calendarButtons[i][j].setBackground(new Color(100,125,150, 0));
                calendarEvents[i][j] = -1;
-               calendarButtons[i][j] = b;
-               calendarWhole.add(b);
             }
         }
         for (int i = 0; i < weekEvents.length; i++) {
@@ -313,13 +307,17 @@ public class GUI extends JFrame
                 calendarEvents[j][eventDay] = i;
             }
         }
-       
+        
+        mainLeft.add("North", upperLeftUI);
+        mainLeft.add("South", calendarScrollPane);
         repaint();
     }
 
     public void createShowAllCoursesView() {
         mainLeft.removeAll();
 
+
+        
         repaint();
     }
 
