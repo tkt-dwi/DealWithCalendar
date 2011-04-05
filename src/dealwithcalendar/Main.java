@@ -16,16 +16,21 @@ import java.util.HashMap;
 public class Main {
     private dwiCalendar currentCalendar;
     private HashMap<Integer, Course> courses;
+    private String address;
     /**
      * @param args the command line arguments
      */
 
     public Main (){
-
-        //This constructor is bullshit, this data would really come from file
+	//This constructor is bullshit, this data would really come from file
         // 
         currentCalendar = new dwiCalendar(2011);
         courses = new HashMap<Integer, Course>();
+
+	//TODO: load the stored data here
+
+	address = "http://www.cs.helsinki.fi/u/tkairi/rajapinta/courses.json";
+	new network.Fetcher(address).read();
     }
 
 
@@ -33,11 +38,6 @@ public class Main {
 
         Main main = new Main();
         GUI gui = new GUI(main);
-        /*
-        while (true)
-        {}
-         * 
-         */
     }
 
     public Course getCourse(int courseID){
