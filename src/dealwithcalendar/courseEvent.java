@@ -18,6 +18,7 @@ public class courseEvent{
     public static final int LECTURE = 0;
     public static final int STUDYGROUP = 1;
     public static final int TEST = 3;
+    public static final int OTHER = 4;
 
     private int weekday;
     private Calendar time;
