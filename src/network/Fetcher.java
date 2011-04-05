@@ -26,7 +26,7 @@ public class Fetcher
     public Fetcher(String _URL)
     {
 	debug = false;
-	debug2 = true;
+	debug2 = false;
 
 	if(debug) System.out.println("foo 1");
 	try
@@ -82,6 +82,8 @@ public class Fetcher
 		    split = block.split(","); //get the descriptors as an array
 		    start = Calendar.getInstance(); //INSTANS PLS
 		    end = Calendar.getInstance(); //MOAR INSTANS PLS
+		    //start.clear();
+		    //end.clear();
 		    name = ""; //init just to be safe and avoid null wizardry
 
 		    for(int j=0;j<split.length;j++) //for every descriptor in the individual chunk
@@ -92,6 +94,9 @@ public class Fetcher
 			{
 			    if(split2[0].equals("\"course\"")) //if the key is "course"
 			    {
+				//START PUUKKO
+				split2 = split[j].split("\"course\":"); //PUUKKOPUUKKOPUUKKOPUUKKOPUUKKOPUUKKOPUUKKO
+				//END PUUKKO
 				if(debug2) System.out.println("Course name " + split2[1] + ", i" + i + ", j" + j + "\n" + block + "\n");
 				name = split2[1]; //then the value is the name
 				name = name.substring(1, name.length()-1); //and chop off the ""
@@ -106,12 +111,13 @@ public class Fetcher
 				     if(debug2) System.out.println("Entering date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
-					     start.set(Calendar.YEAR, new Integer(split3[0])); //set the year as the year value
+					     start.set(Integer.parseInt(split3[0]), Integer.parseInt(split3[1]), Integer.parseInt(split3[2]), 23, 59, 59);
+					     /*start.set(Calendar.YEAR, new Integer(split3[0])); //set the year as the year value
 					     start.set(Calendar.MONTH, new Integer(split3[1])); //set the month as the month value
 					     start.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //set the day as the day value
 					     start.set(Calendar.HOUR, 0);
 					     start.set(Calendar.MINUTE, 0);
-					     start.set(Calendar.SECOND, 0);
+					     start.set(Calendar.SECOND, 0);*/
 				     } catch (NumberFormatException NFEx) //awwwww ssshhhhit man
 				     {
 					 System.err.println("NumberFormatException parsing start date\n" + block + "\n");
@@ -129,18 +135,22 @@ public class Fetcher
 				    if(debug2) System.out.println("Entering end date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
-					     end.set(Calendar.YEAR, new Integer(split3[0])); //year as year
+					     end.set(new Integer(split3[0]), new Integer(split3[1]), new Integer(split3[2]), 23, 59, 59);
+					     /*end.set(Calendar.YEAR, new Integer(split3[0])); //year as year
 					     end.set(Calendar.MONTH, new Integer(split3[1])); //month as month
 					     end.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //day as day
 					     end.set(Calendar.HOUR, 23);
 					     end.set(Calendar.MINUTE, 59);
-					     end.set(Calendar.SECOND, 59);
+					     end.set(Calendar.SECOND, 59);*/
 				     } catch (NumberFormatException NFEx) //WHAT HAS SCIENCE DONE?
 				     {
 					 System.err.println("NumberFormatException parsing end date\n" + block);
 				     }
 				} else
+				{
+				    System.out.println("HURRRR FAIL " + name);
 				    if(debug2) System.out.println("split3 length " + split3.length + " is invalid for " + block);
+				}
 			    }
 			} else
 			    if(debug2) System.out.println("Found invalid key " + split2[0] + " for block\n" + block + "\n");
@@ -149,6 +159,9 @@ public class Fetcher
 		    courses.add(new dealwithcalendar.Course(start, end, name, -1, -1));//add the new course
 		    if(debug) System.out.println("Added " + name + "!");
                 }
+	for(int lol=0;lol<courses.size();lol++)
+	    System.out.println(courses.get(lol));
+
 
 	return courses;
 	}
