@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.imageio.ImageIO;
 
 import java.io.*;
+import java.util.*;
 
 import java.awt.event.*;
 import java.awt.Component.*;
@@ -25,6 +26,8 @@ import java.awt.Container;
 
 public class GUI extends JFrame
                             implements ActionListener {
+
+     Main m;
 
      static int WEEKDAYS = 7;
      static int HOURS = 24;
@@ -135,6 +138,8 @@ public class GUI extends JFrame
      * Constructor to create GUI for calendar
      */
     public GUI(Main main) {
+
+        m = main;
         
         UIManager.put("Button.disabledText", Color.WHITE);
 
@@ -424,7 +429,7 @@ public class GUI extends JFrame
 
         // course view
         if (source == inspectCourse);
-        if (source == addSelectedEvents);
+        if (source == addSelectedEvents) addCourseEvents();
 
     }
 
@@ -463,6 +468,9 @@ public class GUI extends JFrame
         repaint();
     }
 
+    /* Changes mainLeft container's content to basic course view where one
+     * can change course's lecture, studygroup and test times.
+     */
     public void createCoursesView() {
         mainRight.removeAll();
         mainLeft.removeAll();
@@ -471,6 +479,39 @@ public class GUI extends JFrame
         mainRight.validate();
         mainLeft.validate();
         repaint();
+    }
+
+    public void getCourseEvents() {
+        // display all course events of selected course
+        // in courseEventGrid
+
+    }
+
+    public void addCourseEvents() {
+        Course id = m.getACourse(0); // getCourseID for this
+
+        // m.deleteCourseEvents(courseID);
+        // remove all previous course events from this course
+
+        
+
+        for (int i = 0; i < courseEventArray.length; i++) {
+            
+            if (((JCheckBox)courseEventArray[i][5]).isSelected()) {
+                int st = ((JComboBox)courseEventArray[i][2]).getSelectedIndex();
+                int et = ((JComboBox)courseEventArray[i][3]).getSelectedIndex();
+                if (st < et) { // add only those that have appropiate length
+                    int type = ((JComboBox)courseEventArray[i][0]).getSelectedIndex();
+                    if (type == 2) type = 1;
+                    int d = ((JComboBox)courseEventArray[i][1]).getSelectedIndex();
+                    String loc = ((JTextField)courseEventArray[i][4]).getText();
+                    int dur = (et-st)*60;
+                    Calendar c = Calendar.getInstance();
+                    c.set(0, 0, 0, st, 0, 0);
+                    m.addCourseEvent(id, type, c, d, dur, loc);
+                }
+            }
+        }
     }
 
     /**
