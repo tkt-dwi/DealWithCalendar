@@ -59,7 +59,7 @@ public class Fetcher
 	 * @return The ArrayList of courses
 	 */
 	public ArrayList<dealwithcalendar.Course> read()
-	{
+	{ 
 		if (!isReady()) //if we encounter propelms
 			return null;
 		
