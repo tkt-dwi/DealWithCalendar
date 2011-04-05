@@ -119,9 +119,10 @@ public class GUI extends JFrame
      private JTextField insToCal = new JTextField("lisää kalenteriin");
      private JComboBox pickCourse = new JComboBox(dc);
      private JButton inspectCourse = new JButton("Tarkastele kurssia");;
-     private JButton addSelectedEvents = new JButton ("Lisää valitut tapahtumat");
+     private JButton addSelectedEvents = new JButton ("Lisää valitut tapahtumat kalenteriin");
      private JPanel courseViewMain = new JPanel(new BorderLayout());
      private JPanel courseViewUpper = new JPanel(new GridLayout(1,3));
+     private JPanel courseInfo = new JPanel(new BorderLayout());
      private JPanel courseEventGrid = new JPanel(new GridLayout(8,1));
      private JPanel courseEvent = new JPanel(new FlowLayout());
      private JPanel courseViewLower = new JPanel(new BorderLayout());
@@ -139,7 +140,7 @@ public class GUI extends JFrame
 
         // CONSTRUCT STANDARD WEEK VIEW
 
-        // constructE weekNumber marker and calendarButtons for standard week view
+        // construct weekNumber marker and calendarButtons for standard week view
         weekNumber.setFont(new Font("sansserif", Font.BOLD, 25));
         weekNumber.setBackground(new Color(100,125,150, 200));
         weekNumber.setHorizontalAlignment(0);
@@ -201,58 +202,98 @@ public class GUI extends JFrame
 
         // CONSTRUCT COURSES VIEW
 
-        insertToCalendar = new JCheckBox();
+       
+
+        // FIXME: get all courses in here
         pickCourse = new JComboBox(dc);
         pickCourse.setPreferredSize(new Dimension(200, 20));
-        //pickCourse.addActionListener(this);
+        pickCourse.setFont(new Font("sansserif", Font.BOLD, 12));
+        pickCourse.setBackground(new Color(100,125,150));
+        pickCourse.setForeground(new Color(0,0,0));
 
-        // generate course event properties' adding 
-        for (int i=0; i < 8; i++) {
-            courseEvent = new JPanel(new FlowLayout());
-            pickCourseEvent = new JComboBox(crsEvents);
-            pickCourseEvent.setPreferredSize(new Dimension(120,20));
-            courseEventArray[i][0] = pickCourseEvent;
-            courseEvent.add(pickCourseEvent);
-
-            pickDay = new JComboBox(dayNames);
-            pickDay.setPreferredSize(new Dimension(110,20));
-            courseEventArray[i][1] = pickDay;
-            courseEvent.add(pickDay);
-
-            pickHour = new JComboBox(hrs);
-            pickHour.setPreferredSize(new Dimension(70,20));
-            pickHour.setSelectedIndex(12);
-            courseEventArray[i][2] = pickHour;
-            courseEvent.add(pickHour);
-
-            pickHour = new JComboBox(hrs);
-            pickHour.setPreferredSize(new Dimension(70,20));
-            pickHour.setSelectedIndex(12);
-            courseEventArray[i][3] = pickHour;
-            courseEvent.add(pickHour);
-
-            insertPlace = new JTextField("lisää paikka");
-            insertPlace.setPreferredSize(new Dimension(120,20));
-            courseEventArray[i][4] = insertPlace;
-            courseEvent.add(insertPlace);
-
-            insertToCalendar = new JCheckBox("kalenteriin");
-            insertToCalendar.setPreferredSize(new Dimension(130,20));
-            courseEventArray[i][5] = insertToCalendar;
-            courseEvent.add(insertToCalendar);
-
-            courseEventGrid.add(courseEvent);
-        }
-      
         inspectCourse.setBackground(new Color(100,125,150, 0));
         inspectCourse.setFont(new Font("sansserif", Font.PLAIN, 15));
         inspectCourse.setMargin(margins);
         inspectCourse.setPreferredSize(new Dimension(100,20));
         inspectCourse.addActionListener(this);
 
+        // generate general course info into courseinfo JPanel here
+        /*
+         *
+         * 
+         */
+
+        // generate course event properties' adding 
+        for (int i=0; i < 8; i++) {
+            courseEvent = new JPanel(new FlowLayout());
+            courseEvent.setFont(new Font("sansserif", Font.BOLD, 12));
+            courseEvent.setBackground(new Color(100,125,150, 100));
+            courseEvent.setForeground(new Color(0,0,0));
+
+            pickCourseEvent = new JComboBox(crsEvents);
+            pickCourseEvent.setPreferredSize(new Dimension(120,20));
+            pickCourseEvent.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickCourseEvent.setBackground(new Color(100,125,150));
+            pickCourseEvent.setForeground(new Color(0,0,0));
+            courseEventArray[i][0] = pickCourseEvent;
+            courseEvent.add(pickCourseEvent);
+
+            pickDay = new JComboBox(dayNames);
+            pickDay.setPreferredSize(new Dimension(110,20));
+            pickDay.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickDay.setBackground(new Color(100,125,150));
+            pickDay.setForeground(new Color(0,0,0));
+            courseEventArray[i][1] = pickDay;
+            courseEvent.add(pickDay);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickHour.setBackground(new Color(100,125,150));
+            pickHour.setForeground(new Color(0,0,0));
+            pickHour.setSelectedIndex(12);
+            courseEventArray[i][2] = pickHour;
+            courseEvent.add(pickHour);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickHour.setBackground(new Color(100,125,150));
+            pickHour.setForeground(new Color(0,0,0));
+            pickHour.setSelectedIndex(12);
+            courseEventArray[i][3] = pickHour;
+            courseEvent.add(pickHour);
+
+            insertPlace = new JTextField("lisää paikka");
+            insertPlace.setPreferredSize(new Dimension(120,20));
+            insertPlace.setFont(new Font("sansserif", Font.PLAIN, 12));
+            insertPlace.setForeground(new Color(0,0,0));
+            insertPlace.setEditable(true);
+            courseEventArray[i][4] = insertPlace;
+            courseEvent.add(insertPlace);
+
+            insertToCalendar = new JCheckBox("kalenteriin");
+            insertToCalendar.setPreferredSize(new Dimension(130,20));
+            insertToCalendar.setFont(new Font("sansserif", Font.PLAIN, 12));
+            insertToCalendar.setBackground(new Color(100,125,150,0));
+            insertToCalendar.setOpaque(true);
+            insertToCalendar.setForeground(new Color(0,0,0));
+            courseEventArray[i][5] = insertToCalendar;
+            courseEvent.add(insertToCalendar);
+
+            courseEventGrid.add(courseEvent);
+        }
+      
+        addSelectedEvents.setFont(new Font("sansserif", Font.PLAIN, 20));
+        addSelectedEvents.setBackground(new Color(100,125,150));
+        addSelectedEvents.setOpaque(true);
+        addSelectedEvents.setForeground(new Color(0,0,0));
+
         courseViewUpper.add("West", pickCourse);
         courseViewUpper.add("East", inspectCourse);
-        courseViewLower.add("North", courseEventGrid);
+        courseViewLower.add("North", courseInfo);
+        courseViewLower.add(courseEventGrid);
+        courseViewLower.add("South", addSelectedEvents);
         courseViewMain.add(courseViewLower);
         courseViewMain.add("North", courseViewUpper);
         //courseViewMain.setPreferredSize(new Dimension(650, 400));
@@ -359,12 +400,15 @@ public class GUI extends JFrame
 
         Object source = act.getSource();
 
+        // menu and main functions
         if (source == quit) System.exit(0);
         if (source == weekView) createWeekView(dummyWeek2, 13);
         if (source == monthView) openSaveFileDialog();
         if (source == CoursesView) createCoursesView();
         if (source == addCourseView) ;
         if (source == saveWeek) ;
+
+        // week view
         if (source == bPrev) ;
         if (source == bNext) ;
         
@@ -377,7 +421,10 @@ public class GUI extends JFrame
                 }
             }
         }
+
+        // course view
         if (source == inspectCourse);
+        if (source == addSelectedEvents);
 
     }
 
