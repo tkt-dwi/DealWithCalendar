@@ -21,6 +21,7 @@ import java.awt.Insets;
 import java.awt.Font;
 import java.awt.FileDialog;
 import java.awt.Dimension;
+import java.awt.Container;
 
 public class GUI extends JFrame
                             implements ActionListener {
@@ -88,6 +89,8 @@ public class GUI extends JFrame
                                 "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
                                 "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
 
+     private String[] crsEvents = {"Luento", "Laskuharjoitus", "Ohjausryhmä", "Tentti", "Muu"};
+
      // text area and panel for showing event info details
      private JTextArea eventProperties = new JTextArea(eventEmpty, 30, 30);
      private JPanel eventInfo = new JPanel(new GridLayout(1,2));
@@ -110,12 +113,21 @@ public class GUI extends JFrame
      // courses view
      private JComboBox pickDay = new JComboBox(dayNames);
      private JComboBox pickHour = new JComboBox(hrs);
+     private JComboBox pickCourseEvent = new JComboBox(crsEvents);
+     private JTextField insertPlace = new JTextField("lisää paikka");
      private JCheckBox insertToCalendar;
+     private JTextField insToCal = new JTextField("lisää kalenteriin");
      private JComboBox pickCourse = new JComboBox(dc);
-     private JButton inspectCourse;
+     private JButton inspectCourse = new JButton("Tarkastele kurssia");;
+     private JButton addSelectedEvents = new JButton ("Lisää valitut tapahtumat");
      private JPanel courseViewMain = new JPanel(new BorderLayout());
      private JPanel courseViewUpper = new JPanel(new GridLayout(1,3));
-     private JPanel courseViewLower = new JPanel(new GridLayout(10, 5));
+     private JPanel courseEventGrid = new JPanel(new GridLayout(8,1));
+     private JPanel courseEvent = new JPanel(new FlowLayout());
+     private JPanel courseViewLower = new JPanel(new BorderLayout());
+     private Container[][] courseEventArray = new Container[8][6];
+
+
 
     
     /**
@@ -189,34 +201,65 @@ public class GUI extends JFrame
 
         // CONSTRUCT COURSES VIEW
 
-        pickDay = new JComboBox(dayNames);
-        pickHour = new JComboBox(hrs);
         insertToCalendar = new JCheckBox();
         pickCourse = new JComboBox(dc);
         pickCourse.setPreferredSize(new Dimension(200, 20));
         //pickCourse.addActionListener(this);
-        pickDay.addActionListener(this);
-        pickHour.addActionListener(this);
 
+        // generate course event properties' adding 
+        for (int i=0; i < 8; i++) {
+            courseEvent = new JPanel(new FlowLayout());
+            pickCourseEvent = new JComboBox(crsEvents);
+            pickCourseEvent.setPreferredSize(new Dimension(120,20));
+            courseEventArray[i][0] = pickCourseEvent;
+            courseEvent.add(pickCourseEvent);
 
-        // dummy courses
-        inspectCourse = new JButton("Tarkastele kurssia");
+            pickDay = new JComboBox(dayNames);
+            pickDay.setPreferredSize(new Dimension(110,20));
+            courseEventArray[i][1] = pickDay;
+            courseEvent.add(pickDay);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setSelectedIndex(12);
+            courseEventArray[i][2] = pickHour;
+            courseEvent.add(pickHour);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setSelectedIndex(12);
+            courseEventArray[i][3] = pickHour;
+            courseEvent.add(pickHour);
+
+            insertPlace = new JTextField("lisää paikka");
+            insertPlace.setPreferredSize(new Dimension(120,20));
+            courseEventArray[i][4] = insertPlace;
+            courseEvent.add(insertPlace);
+
+            insertToCalendar = new JCheckBox("kalenteriin");
+            insertToCalendar.setPreferredSize(new Dimension(130,20));
+            courseEventArray[i][5] = insertToCalendar;
+            courseEvent.add(insertToCalendar);
+
+            courseEventGrid.add(courseEvent);
+        }
+      
         inspectCourse.setBackground(new Color(100,125,150, 0));
         inspectCourse.setFont(new Font("sansserif", Font.PLAIN, 15));
         inspectCourse.setMargin(margins);
         inspectCourse.setPreferredSize(new Dimension(100,20));
         inspectCourse.addActionListener(this);
 
-
-        courseViewUpper.add(pickCourse);
-        courseViewUpper.add(inspectCourse);
+        courseViewUpper.add("West", pickCourse);
+        courseViewUpper.add("East", inspectCourse);
+        courseViewLower.add("North", courseEventGrid);
+        courseViewMain.add(courseViewLower);
         courseViewMain.add("North", courseViewUpper);
+        //courseViewMain.setPreferredSize(new Dimension(650, 400));
+        courseViewMain.setBackground(new Color(100,125,150, 0));
+        courseViewMain.setFont(new Font("sansserif", Font.PLAIN, 13));
 
-        pickHour.setSelectedIndex(12);
-
-
-
-
+       
         // GENERATE JMENUBAR AND IT'S MENUS        
         
         menuBar.setBackground(new Color(100,125,150, 100));
@@ -376,9 +419,10 @@ public class GUI extends JFrame
     public void createCoursesView() {
         mainRight.removeAll();
         mainLeft.removeAll();
-
-        pickCourse = new JComboBox(dc);
         mainLeft.add(courseViewMain);
+
+        mainRight.validate();
+        mainLeft.validate();
         repaint();
     }
 
