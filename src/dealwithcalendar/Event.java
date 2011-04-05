@@ -92,6 +92,14 @@ public class Event implements Comparable<Event>, Serializable{
         return name;
     }
 
+    public int getCourseID(){
+        return courseID;
+    }
+
+    public void setCourseID(int courseID){
+        this.courseID = courseID;
+    }
+
     public int compareTo(Event o) {
         int x = this.starttime.compareTo(o.starttime);
         if(x == 0)

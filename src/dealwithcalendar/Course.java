@@ -29,6 +29,7 @@ public class Course implements Comparable<Course>, Serializable {
     private Calendar start, end; //start and end dates for the course
     private ArrayList<courseEvent> coursetimes;
     private String name; //course name
+    private String nickname;
     private int id, cr; //course ID and the credits it's worth
 
     /**
@@ -43,6 +44,7 @@ public class Course implements Comparable<Course>, Serializable {
         this.start = _start;
         this.end = _end;
         this.name = _name;
+        this.nickname = _name;
         this.id = _id;
         this.cr = _cr;
         this.coursetimes = new ArrayList<courseEvent>();
@@ -109,12 +111,24 @@ public class Course implements Comparable<Course>, Serializable {
         this.name = name;
     }
 
+    public String getNickname(){
+        return nickname;
+    }
+
+    public void setNickname(String nickname){
+        this.nickname = nickname;
+    }
+
     public Calendar getStart() {
         return start;
     }
 
     public void setStart(Calendar start) {
         this.start = start;
+    }
+
+    public void deleteAllCourseEvents(){
+        coursetimes = new ArrayList<courseEvent>();
     }
     /**
      * Method for adding course events such as lectures and studygroups. The type parameter
