@@ -7,11 +7,12 @@ package dealwithcalendar;
  */
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 
 
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event>, Serializable{
 
     private Calendar starttime;
     private Calendar endtime;
@@ -89,6 +90,14 @@ public class Event implements Comparable<Event>{
 
     public String getName(){
         return name;
+    }
+
+    public int getCourseID(){
+        return courseID;
+    }
+
+    public void setCourseID(int courseID){
+        this.courseID = courseID;
     }
 
     public int compareTo(Event o) {

@@ -40,10 +40,6 @@ public class Main {
          */
     }
 
-    /*public void addCourse(Calendar startTime, Calendar endTime, ){
-
-    }*/
-
     public Course getCourse(int courseID){
         return courses.get(courseID);
     }
@@ -121,7 +117,7 @@ public class Main {
         courses.get(id).setCr(cr);
     }
 
-    public HashMap getCourses(){
+    public HashMap<Integer, Course> getCourses(){
         return courses;
     }
 
@@ -134,6 +130,19 @@ public class Main {
 //     public void changeCourseId(int id, int ident){
 //         courses.get(id).setCr(ident);
 //     }
+
+    public void deleteCourseEvents(int courseID){
+        currentCalendar.removeEvents(courseID);
+        courses.get(courseID).deleteAllCourseEvents();
+    }
+
+    public ArrayList<Event> getWeek(int year, int week){
+        return currentCalendar.getEventsOfWeek(year, week);
+    }
+
+    public ArrayList<Event> getWeek(Calendar date){
+        return currentCalendar.getEventsOfWeek(date);
+    }
 
 
 }
