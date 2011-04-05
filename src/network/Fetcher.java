@@ -71,7 +71,6 @@ public class Fetcher
                 JSONArray chunks = (JSONArray) JSONValue.parse(file.get("courses").toString()); //go into the courses, split them into individual course chunks
 		String block; //parsing tool
 		String[] split, split2, split3; //parsing tools
-		dealwithcalendar.Main main = new dealwithcalendar.Main(); //to add Courses with
 		Calendar start, end; //start and end dates
 		String name; //course name
 		ArrayList<dealwithcalendar.Course> courses = new ArrayList<dealwithcalendar.Course>();
