@@ -152,6 +152,9 @@ public class Course implements Comparable<Course>, Serializable {
         coursetimes.add( new courseEvent(_type, _time, _weekday, _duration, _location));
     }
 
+    public ArrayList<courseEvent> getCourseEvents(){
+        return coursetimes;
+    }
     /**
      * Method for adding exams to the course.
      * @param _testDate The time and date of the exam
