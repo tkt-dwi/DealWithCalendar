@@ -31,9 +31,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        
-
-        GUI gui = new GUI();
+        Main main = new Main();
+        GUI gui = new GUI(main);
         /*
         while (true)
         {}
