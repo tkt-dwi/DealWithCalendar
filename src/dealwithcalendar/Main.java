@@ -8,6 +8,7 @@ package dealwithcalendar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
@@ -43,8 +44,15 @@ public class Main {
     public Course getCourse(int courseID){
         return courses.get(courseID);
     }
-    private boolean createEvents(Course source){
-
+    private boolean createEventsToCalendar(Course source){
+        ArrayList<Event> generated = source.generateEvents();
+        if(generated == null)
+            return false;
+        Iterator<Event> eventIterator = generated.iterator();
+        while(eventIterator.hasNext()){
+            Event current = eventIterator.next();
+            currentCalendar.addEvent(current);
+        }
         return true;
     }
 
