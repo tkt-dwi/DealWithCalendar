@@ -99,9 +99,9 @@ public class Main {
         courses.put(ID, c);
     }
 
-    public void addCourseEvent(Course id, int type, Calendar time, int week, int duration,
+    public void addCourseEvent(Course id, int type, Calendar time, int weekday, int duration,
                                 String location){
-        id.addCourseEvent(type, time, week, duration, location);
+        id.addCourseEvent(type, time, weekday, duration, location);
 
     }
 
@@ -143,6 +143,14 @@ public class Main {
 /*
  * TODO: GUI wants atleast these dummies
  *
+ *
+ *
+ *
+ void deleteCourseEvents(int courseID)
+ * delete all courseEvents from course and created events
+ * from calendar
+
+
  getWeek(int weekN, int yearN)
 return ArrayList<Event>
 
