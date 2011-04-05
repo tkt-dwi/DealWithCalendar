@@ -1,5 +1,6 @@
 package dealwithcalendar;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * @author Deal With It Productions
  * @version 0.1
  */
-public class dwiCalendar implements Comparable<dwiCalendar>
+public class dwiCalendar implements Comparable<dwiCalendar>, Serializable
 {
         private TreeSet<Event> events;
 	private int year; //The year this dwiCalendar represents
@@ -26,6 +27,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>
 	public void addEvent(Event a){
             events.add(a);
         }
+
 
         /**
          * Method for getting Events between a certain timeframe from the calendar.

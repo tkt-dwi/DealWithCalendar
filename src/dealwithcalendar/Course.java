@@ -1,5 +1,6 @@
 package dealwithcalendar;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * @author Deal With It Productions
  * @version 0.1
  */
-public class Course implements Comparable<Course> {
+public class Course implements Comparable<Course>, Serializable {
 
     /**
      * TODO: We need information about course's lecture,

@@ -7,6 +7,7 @@ package dealwithcalendar;
 
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Calendar;
  * are generated. This is still full of fail, I might scrap it, so do not pay much notice.
  * @author koheikki
  */
-public class courseEvent{
+public class courseEvent implements Serializable{
     public static final int LECTURE = 0;
     public static final int STUDYGROUP = 1;
     public static final int TEST = 3;

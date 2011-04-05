@@ -7,11 +7,12 @@ package dealwithcalendar;
  */
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 
 
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event>, Serializable{
 
     private Calendar starttime;
     private Calendar endtime;
