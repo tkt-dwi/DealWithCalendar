@@ -68,6 +68,26 @@ public class dwiCalendarTest {
         assertTrue(eventArray.contains(testEvent));
     }
 
+    @Test
+    public void addingEventsTest(){
+        dwiCalendar testCalendar = new dwiCalendar(2011);
+        Event first = createDummyEvent(2011, 1, 3);
+        testCalendar.addEvent(first);
+
+        assertEquals(1, testCalendar.size());
+
+        Event second = createDummyEvent(2011, 2, 4);
+
+        testCalendar.addEvent(second);
+
+        assertEquals(1, testCalendar.size());
+
+        Event third = createDummyEvent(2011, 3, 4);
+
+        testCalendar.addEvent(third);
+
+        assertEquals(2, testCalendar.size());
+    }
     /**
      * Test to see if many events can be added to the list in arbitary order
      * and then pulled from there ordered by date

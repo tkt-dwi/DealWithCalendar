@@ -8,6 +8,7 @@ package dealwithcalendar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
@@ -30,7 +31,7 @@ public class Main {
 	//TODO: load the stored data here
 
 	address = "http://www.cs.helsinki.fi/u/tkairi/rajapinta/courses.json";
-	new network.Fetcher(address).read();
+	//new network.Fetcher(address).read();
     }
 
 
@@ -43,8 +44,15 @@ public class Main {
     public Course getCourse(int courseID){
         return courses.get(courseID);
     }
-    private boolean createEvents(Course source){
-
+    private boolean createEventsToCalendar(Course source){
+        ArrayList<Event> generated = source.generateEvents();
+        if(generated == null)
+            return false;
+        Iterator<Event> eventIterator = generated.iterator();
+        while(eventIterator.hasNext()){
+            Event current = eventIterator.next();
+            currentCalendar.addEvent(current);
+        }
         return true;
     }
 
@@ -84,15 +92,19 @@ public class Main {
      */
     public void addCourse(Calendar starttime, Calendar endtime, String name,
                           int credits){
-        int ID = 0;
-        while(true){
-            if(!courses.containsKey(ID)){
-                break;
-            }
-            ID++;
-        }
+        int ID = getNextFreeID();
         Course c = new Course(starttime, endtime, name, ID, credits);
         courses.put(ID, c);
+    }
+
+    public void addCourses(ArrayList<Course> courseArray){
+        Iterator<Course> courseIterator = courseArray.iterator();
+        while(courseIterator.hasNext()){
+            Course current = courseIterator.next();
+            int ID = getNextFreeID();
+            current.setId(ID);
+            courses.put(ID, current);
+        }
     }
 
     public void addCourseEvent(Course id, int type, Calendar time, int weekday, int duration,
@@ -142,6 +154,17 @@ public class Main {
 
     public ArrayList<Event> getWeek(Calendar date){
         return currentCalendar.getEventsOfWeek(date);
+    }
+
+    private int getNextFreeID(){
+        int ID = 0;
+        while(true){
+            if(!courses.containsKey(ID)){
+                break;
+            }
+            ID++;
+        }
+        return ID;
     }
 
 

@@ -25,9 +25,20 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
     }
 
     public void addEvent(Event a) {
+        Iterator<Event> eventIterator = events.iterator();
+        while(eventIterator.hasNext()){
+            Event current = eventIterator.next();
+            if(dateCrash(current.getStarttime(), current.getEndtime(), a.getStarttime(), true))
+                return;
+            if(dateCrash(current.getStarttime(), current.getEndtime(), a.getEndtime(), false))
+                return;
+        }
         events.add(a);
     }
 
+    public int size(){
+        return events.size();
+    }
     /**
      * Method for getting Events between a certain timeframe from the calendar.
      * @param start The starting time
@@ -177,5 +188,12 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
      */
     public int compareTo(dwiCalendar _c) {
         return this.year - _c.year;
+    }
+
+    private boolean dateCrash(Calendar start, Calendar end, Calendar toBeTested, boolean isStart){
+        if(isStart)
+            return (start.compareTo(toBeTested) <= 0 && end.compareTo(toBeTested) > 0);
+        else
+            return (start.compareTo(toBeTested) < 0 && end.compareTo(toBeTested) >= 0);
     }
 }

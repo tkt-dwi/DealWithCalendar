@@ -187,11 +187,11 @@ public class Course implements Comparable<Course>, Serializable {
                 // System.out.println("FOUND TEST!");
                 starttime = (Calendar)current.getTime().clone();
                 endtime = getEndtime(current.getDuration(), starttime);
-                eventName = name + " exam";
+                eventName = nickname + " exam";
                 Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
                 generatedEvents.add(generatedTest);
             }
-            else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP){
+            else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP || current.getType() == courseEvent.OTHER){
                 // System.out.println("FOUND LECTURE/STUDYGROUP!");
                 Calendar weeklyDates = (Calendar)start.clone();
                 findFirstMatchingWeekday(weeklyDates, current);
@@ -203,12 +203,13 @@ public class Course implements Comparable<Course>, Serializable {
                     starttime.set(Calendar.MILLISECOND, 0);
                     endtime = getEndtime(current.getDuration(), starttime);
                     if(current.getType() == courseEvent.LECTURE){
-                        eventName = name + " lecture";
+                        eventName = nickname + " lecture";
                         // System.out.println("Creating lecture");
-                    }else{
-                        eventName = name + " studygroup";
+                    }else if (current.getType() == courseEvent.STUDYGROUP){
+                        eventName = nickname + " studygroup";
                         // System.out.println("Creating studygroup");
-                    }
+                    }else
+                        eventName = nickname;
                     Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
                     generatedEvents.add(generatedTest);
                     weeklyDates.add(Calendar.DATE, 7);
