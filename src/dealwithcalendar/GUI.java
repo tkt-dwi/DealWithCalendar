@@ -526,7 +526,7 @@ public class GUI extends JFrame
     public void addCourseEvents() {
         Course id = m.getACourse(0); // getCourseID for this
 
-        // m.deleteCourseEvents(id);
+        m.deleteCourseEvents(0);
         // remove all previous course events from this course
         // remove all events from this course from calendar
 
