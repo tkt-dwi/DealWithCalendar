@@ -586,7 +586,6 @@ public class GUI extends JFrame
         // remove all events from this course from calendar
 
         for (int i = 0; i < courseEventType.length; i++) {
-            System.out.println("!!!");
             
             if (courseEventSel[i].isSelected()) {
 
@@ -603,11 +602,10 @@ public class GUI extends JFrame
                     Calendar c = Calendar.getInstance();
                     c.set(0, 0, 0, st, 0, 0);
                     m.addCourseEvent(m.getACourse(courseid), type, c, d, dur, loc);
-                    System.out.println(m.getACourse(courseid).getCourseEvents());
                 }
             }
         }
-       // add all course events from this course to calendar
+        m.getCourse(courseid).generateEvents();
     }
 
     public void deleteCourseEvents() {
