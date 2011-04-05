@@ -28,6 +28,7 @@ public class GUI extends JFrame
                             implements ActionListener {
 
      Main m;
+     HashMap<Integer, Course> crs;
 
      private static final int WEEKDAYS = 7;
      private static final int HOURS = 24;
@@ -69,7 +70,8 @@ public class GUI extends JFrame
      String[][] dummyWeek2 = {{"2", "8", "10", "Ohtu", "CK111", ""},
                              {"3", "10", "14", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
 
-     String[] dc = {"Ohjelmistotuotanto", "Rinnakkaisohjelmointi", "Ohjelmoinnin perusteet"};
+     String[] dc; // Course names for pickCourse combobox
+     private int[] comboToCourseID; // maps pickCourse combobox's indexes to courseID's;
 
      // event infos
      private String eventEmpty ="Kurssi:  \t \n" +
@@ -140,6 +142,7 @@ public class GUI extends JFrame
     public GUI(Main main) {
 
         m = main;
+        crs = m.getCourses();
         
         UIManager.put("Button.disabledText", Color.WHITE);
 
@@ -432,6 +435,26 @@ public class GUI extends JFrame
 
     }
 
+    public void mapCourses() {
+        dc = new String[crs.size()];
+        comboToCourseID = new int[crs.size()];
+        int i = 0;
+
+        Iterator<Course> ci = crs.values().iterator();
+
+        while (ci.hasNext()) {
+            Course c = ci.next();
+            dc[i] = c.getName();
+            comboToCourseID[i] = c.getId();
+        }
+
+
+
+       
+
+
+    }
+
     public void createWeekView(String[][] weekEvents, int wNumber) {
 
         mainLeft.removeAll();
@@ -493,29 +516,31 @@ public class GUI extends JFrame
     }
 
     public void updateCourseInformation() {
-        int courseid = 0;
+        int courseid = comboToCourseID[pickCourse.getSelectedIndex()];
 
 
 
-        updateCourseEvents();
+
+
+        updateCourseEvents(courseid);
 
     }
 
 
-    public void updateCourseEvents() {
+    public void updateCourseEvents(int courseid) {
         // display all course events of selected course
         // in courseEventGrid
 
         setCourseEventGridToDefault();
 
-        ArrayList<courseEvent> ce = m.getACourse(0).getCourseEvents();
+        ArrayList<courseEvent> ce = m.getACourse(courseid).getCourseEvents();
 
         for (int i = 0; i < ce.size(); i++) {
-            ((JComboBox)courseEventArray[i][0]).setSelectedIndex(ce[i].getType());
-            ((JComboBox)courseEventArray[i][1]).setSelectedIndex(ce[i].getWeekDay());
-            ((JComboBox)courseEventArray[i][2]).setSelectedIndex(ce[i].getTime());
-            ((JComboBox)courseEventArray[i][3]).setSelectedIndex(ce[i].getTime()+ (ce[i].getDuration()/60));
-            ((JTextField)courseEventArray[i][4]).setText(ce[i].getLocation());
+            ((JComboBox)courseEventArray[i][0]).setSelectedIndex(ce.get(i).getType());
+            ((JComboBox)courseEventArray[i][1]).setSelectedIndex(ce.get(i).getWeekday());
+            ((JComboBox)courseEventArray[i][2]).setSelectedIndex(ce.get(i).getTime().get(Calendar.HOUR_OF_DAY));
+            ((JComboBox)courseEventArray[i][3]).setSelectedIndex(ce.get(i).getTime().get(Calendar.HOUR_OF_DAY) + (ce.get(i).getDuration()/60));
+            ((JTextField)courseEventArray[i][4]).setText(ce.get(i).getLocation());
             ((JCheckBox)courseEventArray[i][5]).setSelected(true);
         }
         courseEventGrid.validate();
