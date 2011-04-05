@@ -16,7 +16,7 @@ public class Fetcher
 {
     private URL address; //the address to be read
     private InputStreamReader reader; //reader for the content
-    private boolean debug; // super duper debug madness
+    private boolean debug, debug2; // super duper debug madness
 
     /**
      * Constructor to initialize the URL and reader
@@ -26,6 +26,7 @@ public class Fetcher
     public Fetcher(String _URL)
     {
 	debug = false;
+	debug2 = true;
 
 	if(debug) System.out.println("foo 1");
 	try
@@ -53,12 +54,14 @@ public class Fetcher
 	}
 	
 	/**
-	 * Parse the content of the site and add via the dealwithcalendar.Main class
+	 * Parse the content of the site and return it in an ArrayList
+	 *
+	 * @return The ArrayList of courses
 	 */
-	public void read()
+	public ArrayList<dealwithcalendar.Course> read()
 	{
 		if (!isReady()) //if we encounter propelms
-			return;
+			return null;
 		
 		JSONObject file = (JSONObject) JSONValue.parse(reader); //read the entire interface
                 Set set = file.keySet(); //get the interface in Set form
@@ -71,6 +74,7 @@ public class Fetcher
 		dealwithcalendar.Main main = new dealwithcalendar.Main(); //to add Courses with
 		Calendar start, end; //start and end dates
 		String name; //course name
+		ArrayList<dealwithcalendar.Course> courses = new ArrayList<dealwithcalendar.Course>();
                 for(int i=0;i<chunks.size();i++) //for every course chunk
                 {
 		    if(debug) System.out.println("i: " + (i+1) + " out of " + chunks.size());
@@ -85,52 +89,68 @@ public class Fetcher
 		    {
 			if(debug) System.out.println("j: " + (j+1) + " out of " + split.length);
 			split2 = split[j].split(":"); //split into key and value
-			if(split2.length > 1) //if there are actually a key and value
+			if(split2.length == 2) //if there are actually a key and value
 			{
 			    if(split2[0].equals("\"course\"")) //if the key is "course"
 			    {
+				if(debug2) System.out.println("Course name " + split2[1] + ", i" + i + ", j" + j + "\n" + block + "\n");
 				name = split2[1]; //then the value is the name
 				name = name.substring(1, name.length()-1); //and chop off the ""
 			    }
 			    else if(split2[0].equals("\"start_date\"")) //or it might be the start date
 			    {
+				 if(debug2) System.out.println("Course start date " + split2[1] + ", i" + i + ", j" + j + "\n" + block + "\n");
 				 split2[1] = split2[1].substring(1, split2[1].length()-1); //chop off the ""
 				 split3 = split2[1].split("-"); //get the three vals (year-month-day) as array
-				 if(split3.length > 2) //if there are actually three vals
+				 if(split3.length == 3) //if there are actually three vals
 				 {
+				     if(debug2) System.out.println("Entering date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
 					     start.set(Calendar.YEAR, new Integer(split3[0])); //set the year as the year value
 					     start.set(Calendar.MONTH, new Integer(split3[1])); //set the month as the month value
 					     start.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //set the day as the day value
+					     start.set(Calendar.HOUR, 0);
+					     start.set(Calendar.MINUTE, 0);
+					     start.set(Calendar.SECOND, 0);
 				     } catch (NumberFormatException NFEx) //awwwww ssshhhhit man
 				     {
-					 System.err.println("NumberFormatException parsing start date\n" + block);
+					 System.err.println("NumberFormatException parsing start date\n" + block + "\n");
 				     }
-				 }
+				 } else
+				     if(debug2) System.out.println("split3 length " + split3.length + " is invalid for " + block);
 			    }
 			    else if(split2.equals("\"end_date\"")) //hey, it might be an end date
 			    {
-				 split2[1] = split2[1].substring(1, split2[1].length()-1); //chop off the ""
-				 split3 = split2[1].split("-"); //{year,month,day}
-				 if(split3.length > 2) //if the three vals are present
-				 {
+				if(debug2) System.out.println("Course end date " + split2[1] + ", i" + i + ", j" + j + "\n" + block + "\n");
+			 	split2[1] = split2[1].substring(1, split2[1].length()-1); //chop off the ""
+				split3 = split2[1].split("-"); //{year,month,day}
+				if(split3.length == 3) //if the three vals are present
+				{
+				    if(debug2) System.out.println("Entering end date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
 					     end.set(Calendar.YEAR, new Integer(split3[0])); //year as year
 					     end.set(Calendar.MONTH, new Integer(split3[1])); //month as month
 					     end.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //day as day
+					     end.set(Calendar.HOUR, 23);
+					     end.set(Calendar.MINUTE, 59);
+					     end.set(Calendar.SECOND, 59);
 				     } catch (NumberFormatException NFEx) //WHAT HAS SCIENCE DONE?
 				     {
 					 System.err.println("NumberFormatException parsing end date\n" + block);
 				     }
-				 }
+				} else
+				    if(debug2) System.out.println("split3 length " + split3.length + " is invalid for " + block);
 			    }
-			}
+			} else
+			    if(debug2) System.out.println("Found invalid key " + split2[0] + " for block\n" + block + "\n");
 		    }
 
-		    main.addCourse(start, end, name, -1); //Add the course through the main class
+		    courses.add(new dealwithcalendar.Course(start, end, name, -1, -1));//add the new course
 		    if(debug) System.out.println("Added " + name + "!");
                 }
+
+	return courses;
 	}
 }
