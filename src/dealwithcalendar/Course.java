@@ -182,6 +182,7 @@ public class Course implements Comparable<Course> {
                     starttime.set(Calendar.HOUR_OF_DAY, current.getTime().get(Calendar.HOUR_OF_DAY));
                     starttime.set(Calendar.MINUTE, current.getTime().get(Calendar.MINUTE));
                     starttime.set(Calendar.SECOND, current.getTime().get(Calendar.SECOND));
+                    starttime.set(Calendar.MILLISECOND, 0);
                     endtime = getEndtime(current.getDuration(), starttime);
                     if(current.getType() == courseEvent.LECTURE){
                         eventName = name + " lecture";
