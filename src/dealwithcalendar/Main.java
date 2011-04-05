@@ -31,7 +31,9 @@ public class Main {
 	//TODO: load the stored data here
 
 	address = "http://www.cs.helsinki.fi/u/tkairi/rajapinta/courses.json";
-	//new network.Fetcher(address).read();
+	network.Fetcher fetcher = new network.Fetcher(address);
+        ArrayList<Course> remoteCourses = fetcher.read();
+        addCourses(remoteCourses);
     }
 
 
