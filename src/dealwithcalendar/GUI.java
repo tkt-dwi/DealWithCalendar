@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import java.io.*;
 import java.util.*;
+import java.text.*;
 
 
 import java.awt.event.*;
@@ -30,7 +31,10 @@ public class GUI extends JFrame
 
      Main m;
      HashMap<Integer, Course> crs;
-     
+     ArrayList<Event> weekEvents;
+
+     private int curYear = Calendar.getInstance().get(Calendar.YEAR);
+     private int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
      private static final int WEEKDAYS = 7;
      private static final int HOURS = 24;
      private static final int MONTHS = 12;
@@ -62,10 +66,12 @@ public class GUI extends JFrame
      private JMenuItem addCourseView = new JMenuItem("Lisää kurssi");
 
      // weekNumber indicator
-     JTextField weekNumber = new JTextField("VIIKKO ");
+     JTextField weekNumber = new JTextField(curYear + "VIIKKO " + curWeek);
+
+
 
      // dummy week for prototype
-     String[][] dummyWeek = {{"1", "8", "10", "Ohtu", "CK111", ""},
+     String[][] dw = {{"1", "8", "10", "Ohtu", "CK111", ""},
                              {"2", "10", "12", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
 
      String[][] dummyWeek2 = {{"2", "8", "10", "Ohtu", "CK111", ""},
@@ -95,7 +101,14 @@ public class GUI extends JFrame
                                 "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
                                 "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
 
-     private String[] crsEvents = {"Luento", "Laskuharjoitus", "Ohjausryhmä", "Tentti", "Muu"};
+     private String[] crsEvents = {"Luento", "Laskuharjoitus", "Ohjausryhmä", "Muu"};
+
+     private String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+     private String[] monthdays = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                                   "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                                   "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+     private String[] years = new String[2];
+
 
      // text area and panel for showing event info details
      private JTextArea eventProperties = new JTextArea(eventEmpty, 30, 30);
@@ -122,6 +135,9 @@ public class GUI extends JFrame
      private JComboBox pickCourseEvent = new JComboBox(crsEvents);
      private JTextField insertPlace = new JTextField("lisää paikka");
      private JCheckBox insertToCalendar;
+     private JComboBox pickTestDay = new JComboBox(monthdays);
+     private JComboBox pickTestMonth = new JComboBox(months);
+     private JComboBox pickTestYear = new JComboBox(years);
      private JComboBox pickCourse = new JComboBox();
      private JButton inspectCourse = new JButton("Tarkastele kurssia");;
      private JButton addSelectedEvents = new JButton ("Lisää valitut tapahtumat kalenteriin");
@@ -129,12 +145,17 @@ public class GUI extends JFrame
      private JPanel courseViewUpper = new JPanel(new FlowLayout());
      private JPanel courseInfo = new JPanel(new BorderLayout());
      private JTextField courseNickname = new JTextField("");
+     private JTextField cn = new JTextField("Anna kurssille nikki: ");
      private JTextField selectedCourseInfo = new JTextField("");
      private JPanel courseEventGrid = new JPanel(new GridLayout(8,1));
      private JPanel courseEvent = new JPanel(new FlowLayout());
      private JPanel courseViewLower = new JPanel(new BorderLayout());
+     private JPanel courseNick = new JPanel(new FlowLayout());
      private JComboBox[] courseEventType = new JComboBox[8];
-     private JComboBox[] courseEventDays = new JComboBox[8];
+     private JComboBox[] courseEventDays = new JComboBox[6];
+     private JComboBox[] courseEventTestDays = new JComboBox[2];
+     private JComboBox[] courseEventTestMonths = new JComboBox[2];
+     private JComboBox[] courseEventTestYears = new JComboBox[2];
      private JComboBox[] courseEventSTime = new JComboBox[8];
      private JComboBox[] courseEventETime = new JComboBox[8];
      private JTextField[] courseEventLoc = new JTextField[8];
@@ -148,10 +169,16 @@ public class GUI extends JFrame
      * Constructor to create GUI for calendar
      */
     public GUI(Main main) {
+
+        for (int i = 0; i < 2; i++) {
+            years[i] = String.valueOf(curYear +i);
+        }
         
         m = main;
         crs = m.getCourses();
         mapCourses();
+
+        weekEvents = m.getWeek(curYear, curWeek);
         
         UIManager.put("Button.disabledText", Color.WHITE);
 
@@ -164,8 +191,10 @@ public class GUI extends JFrame
         weekNumber.setEditable(false);
         bPrev.setFont(new Font("sansserif", Font.BOLD, 25));
         bPrev.setBackground(new Color(100,125,150, 200));
+        bPrev.addActionListener(this);
         bNext.setFont(new Font("sansserif", Font.BOLD, 25));
         bNext.setBackground(new Color(100,125,150, 200));
+        bNext.addActionListener(this);
         
         calendarWhole = new JPanel(new GridLayout(HOURS,WEEKDAYS));
         calendarButtons = new JButton[HOURS][WEEKDAYS];
@@ -197,7 +226,7 @@ public class GUI extends JFrame
             }
         }
         // FIXME: get current week's events in here
-        createWeekView(dummyWeek, 12);
+        createWeekView(curYear, curWeek);
 
         // add week view as default view into GUI.mainLeft
         mainLeft.add("North", upperLeftUI);
@@ -208,6 +237,8 @@ public class GUI extends JFrame
         eventProperties.setBackground(new Color(100,125,150, 100));
         eventProperties.setForeground(new Color(0,0,0));
         eventProperties.setEditable(false);
+        eventProperties.setLineWrap(true);
+        eventProperties.setWrapStyleWord(true);
         eventInfo.add(eventProperties);
 
         // construct default view of right side of UI
@@ -238,14 +269,21 @@ public class GUI extends JFrame
         selectedCourseInfo.setFont(new Font("sansserif", Font.BOLD, 12));
         selectedCourseInfo.setBackground(new Color(100,125,150));
         selectedCourseInfo.setForeground(new Color(0,0,0));
+        
         courseNickname.setText("");
         courseNickname.setEditable(true);
+        courseNickname.setPreferredSize(new Dimension(200, 20));
+        cn.setFont(new Font("sansserif", Font.BOLD, 12));
+        cn.setBackground(new Color(100,125,150, 0));
+        cn.setEditable(false);
+        courseNick.add(cn);
+        courseNick.add(courseNickname);
 
         courseInfo.add("North", selectedCourseInfo);
-        courseInfo.add("South", courseNickname);
+        courseInfo.add("South", courseNick);
 
         // generate course event properties' adding 
-        for (int i=0; i < 8; i++) {
+        for (int i=0; i < 6; i++) {
             courseEvent = new JPanel(new FlowLayout());
             courseEvent.setFont(new Font("sansserif", Font.BOLD, 12));
             courseEvent.setBackground(new Color(100,125,150, 100));
@@ -301,6 +339,81 @@ public class GUI extends JFrame
             insertToCalendar.setOpaque(true);
             insertToCalendar.setForeground(new Color(0,0,0));
             courseEventSel[i] = insertToCalendar;
+            courseEvent.add(insertToCalendar);
+
+            courseEventGrid.add(courseEvent);
+        }
+
+        for (int i=0; i < 2; i++) {
+            courseEvent = new JPanel(new FlowLayout());
+            courseEvent.setFont(new Font("sansserif", Font.BOLD, 12));
+            courseEvent.setBackground(new Color(100,125,150, 100));
+            courseEvent.setForeground(new Color(0,0,0));
+
+            insertPlace = new JTextField("Tentti");
+            insertPlace.setFont(new Font("sansserif", Font.BOLD, 12));
+            insertPlace.setBackground(new Color(100,125,150, 0));
+            insertPlace.setEditable(false);
+            courseEvent.add(insertPlace);
+
+            pickTestDay = new JComboBox(monthdays);
+            pickTestDay.setPreferredSize(new Dimension(50,20));
+            pickTestDay.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickTestDay.setBackground(new Color(100,125,150));
+            pickTestDay.setForeground(new Color(0,0,0));
+            courseEventTestDays[i] = pickTestDay;
+            courseEvent.add(pickTestDay);
+
+            pickTestMonth = new JComboBox(months);
+            pickTestMonth.setPreferredSize(new Dimension(50,20));
+            pickTestMonth.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickTestMonth.setBackground(new Color(100,125,150));
+            pickTestMonth.setForeground(new Color(0,0,0));
+            courseEventTestMonths[i] = pickTestMonth;
+            courseEvent.add(pickTestMonth);
+
+            pickTestYear = new JComboBox(years);
+            pickTestYear.setPreferredSize(new Dimension(70,20));
+            pickTestYear.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickTestYear.setBackground(new Color(100,125,150));
+            pickTestYear.setForeground(new Color(0,0,0));
+            courseEventTestYears[i] = pickTestYear;
+            courseEvent.add(pickTestYear);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickHour.setBackground(new Color(100,125,150));
+            pickHour.setForeground(new Color(0,0,0));
+            pickHour.setSelectedIndex(12);
+            courseEventSTime[i+6] = pickHour;
+            courseEvent.add(pickHour);
+
+            pickHour = new JComboBox(hrs);
+            pickHour.setPreferredSize(new Dimension(70,20));
+            pickHour.setFont(new Font("sansserif", Font.BOLD, 12));
+            pickHour.setBackground(new Color(100,125,150));
+            pickHour.setForeground(new Color(0,0,0));
+            pickHour.setSelectedIndex(12);
+            courseEventETime[i+6] = pickHour;
+            courseEvent.add(pickHour);
+
+            insertPlace = new JTextField("lisää paikka");
+            insertPlace.setPreferredSize(new Dimension(120,20));
+            insertPlace.setFont(new Font("sansserif", Font.PLAIN, 12));
+            insertPlace.setBackground(new Color(255,255,255));
+            insertPlace.setForeground(new Color(0,0,0));
+            insertPlace.setEditable(true);
+            courseEventLoc[i+6] = insertPlace;
+            courseEvent.add(insertPlace);
+
+            insertToCalendar = new JCheckBox("kalenteriin");
+            insertToCalendar.setPreferredSize(new Dimension(125,20));
+            insertToCalendar.setFont(new Font("sansserif", Font.PLAIN, 12));
+            insertToCalendar.setBackground(new Color(100,125,150,0));
+            insertToCalendar.setOpaque(true);
+            insertToCalendar.setForeground(new Color(0,0,0));
+            courseEventSel[i+6] = insertToCalendar;
             courseEvent.add(insertToCalendar);
 
             courseEventGrid.add(courseEvent);
@@ -425,21 +538,21 @@ public class GUI extends JFrame
 
         // menu and main functions
         if (source == quit) System.exit(0);
-        if (source == weekView) createWeekView(dummyWeek2, 13);
+        if (source == weekView) createWeekView(curYear, curWeek);
         if (source == monthView) openSaveFileDialog();
         if (source == CoursesView) createCoursesView();
         if (source == addCourseView) ;
         if (source == saveWeek) ;
 
         // week view
-        if (source == bPrev) ;
-        if (source == bNext) ;
+        if (source == bPrev) createWeekView(curYear, curWeek -1) ;
+        if (source == bNext) createWeekView(curYear, curWeek +1);
         
         for (byte i = 0; i < HOURS ; i++) {
             for (byte j = 0; j < WEEKDAYS; j++) {
                 if (source == calendarButtons[i][j]) {
                     if (calendarEvents[i][j] >= 0)
-                        updateEventInfo(dummyWeek2[calendarEvents[i][j]]);
+                        updateEventInfo(weekEvents.get(calendarEvents[i][j]));
                     else { openInfoWindow(); }
                 }
             }
@@ -466,11 +579,22 @@ public class GUI extends JFrame
         }
     }
 
-    public void createWeekView(String[][] weekEvents, int wNumber) {
+    public void createWeekView(int cy, int cw) {
+        if (cw == 0) {
+            cw = 53;
+            cy--;
+        }
+        if (cw == 54) {
+            cw = 1;
+            cy++;
+        }
+        curYear = cy;
+        curWeek = cw;
+        weekEvents = m.getWeek(cy,cw);
 
         mainLeft.removeAll();
         mainRight.removeAll();
-        weekNumber.setText("Viikko " +Integer.toString(wNumber));
+        weekNumber.setText(cy + " VIIKKO " + cw);
         int eventDay = 0;
         int eventStart = 0;
         int eventEnd = 0;
@@ -482,15 +606,23 @@ public class GUI extends JFrame
                calendarEvents[i][j] = -1;
             }
         }
-        for (int i = 0; i < weekEvents.length; i++) {
-            eventDay = Integer.valueOf(weekEvents[i][0]);
-            eventStart = Integer.valueOf(weekEvents[i][1]);
-            eventEnd = Integer.valueOf(weekEvents[i][2]);
-            
-            for (int j = eventStart; j < eventEnd; j++) {
-                calendarButtons[j][eventDay].setText(weekEvents[i][3] + " : " + weekEvents[i][4]);
-                setButtonBgBlue(j, eventDay);
-                calendarEvents[j][eventDay] = i;
+
+        if (weekEvents != null) {
+            System.out.println(weekEvents.size());
+
+            for (int i = 0; i < weekEvents.size(); i++) {
+                Event e = weekEvents.get(i);
+                eventDay = e.getStarttime().get(Calendar.DAY_OF_WEEK);
+                if (eventDay == 1) eventDay = 6;
+                else eventDay = eventDay-2;
+                eventStart = e.getStarttime().get(Calendar.HOUR_OF_DAY);
+                eventEnd = e.getEndtime().get(Calendar.HOUR_OF_DAY);
+
+                for (int j = eventStart; j < eventEnd; j++) {
+                    calendarButtons[j][eventDay].setText(e.getName() + " : " + e.getLocation());
+                    setButtonBgBlue(j, eventDay);
+                    calendarEvents[j][eventDay] = i;
+                }
             }
         }
         upperLeftUI.removeAll();
@@ -516,9 +648,18 @@ public class GUI extends JFrame
 
     public void setCourseEventGridToDefault() {
 
-        for (int i = 0; i < courseEventType.length; i++) {
+        for (int i = 0; i < courseEventType.length-2; i++) {
             ((JComboBox)courseEventType[i]).setSelectedIndex(0);
             ((JComboBox)courseEventDays[i]).setSelectedIndex(0);
+            ((JComboBox)courseEventSTime[i]).setSelectedIndex(12);
+            ((JComboBox)courseEventETime[i]).setSelectedIndex(12);
+            ((JTextField)courseEventLoc[i]).setText("lisää paikka");
+            ((JCheckBox)courseEventSel[i]).setSelected(false);
+        }
+        for (int i = 0; i < 2; i++) {
+            ((JComboBox)courseEventTestDays[i]).setSelectedIndex(0);
+            ((JComboBox)courseEventTestMonths[i]).setSelectedIndex(0);
+            ((JComboBox)courseEventTestYears[i]).setSelectedIndex(0);
             ((JComboBox)courseEventSTime[i]).setSelectedIndex(12);
             ((JComboBox)courseEventETime[i]).setSelectedIndex(12);
             ((JTextField)courseEventLoc[i]).setText("lisää paikka");
@@ -535,7 +676,7 @@ public class GUI extends JFrame
 
     public String parseDate(Calendar c) {
         String d = c.get(Calendar.DAY_OF_MONTH) + "." +
-                   c.get(Calendar.MONTH) + "." +
+                   (c.get(Calendar.MONTH)+1) + "." +
                    c.get(Calendar.YEAR);
 
         return d;
@@ -552,9 +693,7 @@ public class GUI extends JFrame
         courseNickname.setText(c.getNickname());
         courseInfo.validate();
         courseInfo.repaint();
-
     }
-
 
     public void updateCourseEvents(int courseid) {
         // display all course events of selected course
@@ -563,19 +702,32 @@ public class GUI extends JFrame
         setCourseEventGridToDefault();
 
         ArrayList<courseEvent> ce = m.getACourse(courseid).getCourseEvents();
+        int tn = 0;
 
         for (int i = 0; i < ce.size(); i++) {
-            courseEventType[i].setSelectedIndex(ce.get(i).getType());
-            courseEventDays[i].setSelectedIndex(ce.get(i).getWeekday());
-            courseEventSTime[i].setSelectedIndex(ce.get(i).getTime().get(Calendar.HOUR_OF_DAY));
-            courseEventETime[i].setSelectedIndex(ce.get(i).getTime().get(Calendar.HOUR_OF_DAY) + (ce.get(i).getDuration()/60));
-            courseEventLoc[i].setText(ce.get(i).getLocation());
-            courseEventSel[i].setSelected(true);
+            courseEvent e = ce.get(i);
+            if (e.getType() != 3) {
+                courseEventType[i].setSelectedIndex(e.getType());
+                courseEventDays[i].setSelectedIndex(e.getWeekday());
+                courseEventSTime[i].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY));
+                courseEventETime[i].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY) + (ce.get(i).getDuration()/60));
+                courseEventLoc[i].setText(e.getLocation());
+                courseEventSel[i].setSelected(true);
+            }
+            else {
+                courseEventTestDays[tn].setSelectedIndex(e.getTime().get(Calendar.DAY_OF_MONTH) -1);
+                courseEventTestMonths[tn].setSelectedIndex(e.getTime().get(Calendar.MONTH));
+                courseEventTestYears[tn].setSelectedIndex(e.getTime().get(Calendar.YEAR)- Calendar.getInstance().get(Calendar.YEAR));
+                courseEventSTime[6+tn].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY));
+                courseEventETime[6+tn].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY) + (ce.get(i).getDuration()/60));
+                courseEventLoc[6+tn].setText(e.getLocation());
+                courseEventSel[6+tn].setSelected(true);
+                tn++;
+            }
         }
         courseEventGrid.validate();
         courseEventGrid.repaint();
     }
-
 
     public void addCourseEvents() {
         int courseid = comboToCourseID[pickCourse.getSelectedIndex()];
@@ -585,7 +737,9 @@ public class GUI extends JFrame
         // remove all previous course events from this course
         // remove all events from this course from calendar
 
-        for (int i = 0; i < courseEventType.length; i++) {
+        m.getACourse(courseid).setNickname(courseNickname.getText());
+
+        for (int i = 0; i < courseEventType.length-2; i++) {
             
             if (courseEventSel[i].isSelected()) {
 
@@ -595,7 +749,8 @@ public class GUI extends JFrame
                 if (st < et) { // add only those with starttime < endtime
                     int type = courseEventType[i].getSelectedIndex();
                     if (type == 2) type = 1;
-                    int d = courseEventDays[i].getSelectedIndex() +1;
+                    if (type == 3) type = 4;
+                    int d = ((JComboBox)courseEventDays[i]).getSelectedIndex() +1;
                     String loc = courseEventLoc[i].getText();
                     if (loc.equals("lisää paikka")) loc = "";
                     int dur = (et-st)*60;
@@ -605,13 +760,46 @@ public class GUI extends JFrame
                 }
             }
         }
-        m.getCourse(courseid).generateEvents();
+        for (int i = 0; i < 2; i++) {
+
+            if (courseEventSel[i+6].isSelected()) {
+
+                // create course event properties
+                int st = courseEventSTime[i+6].getSelectedIndex();
+                int et = courseEventETime[i+6].getSelectedIndex();
+                if (st < et) { // add only those with starttime < endtime
+                    int td = courseEventTestDays[i].getSelectedIndex() +1;
+                    int tm = courseEventTestMonths[i].getSelectedIndex();
+                    int ty = Calendar.getInstance().get(Calendar.YEAR) + courseEventTestYears[i].getSelectedIndex();
+                    int type = 3;
+                    String loc = courseEventLoc[i+6].getText();
+                    if (loc.equals("lisää paikka")) loc = "";
+                    int dur = (et-st)*60;
+                    Calendar c = Calendar.getInstance();
+                    c.set(ty, tm, td, st, 0, 0);
+                    m.addCourseExam(m.getACourse(courseid), c, loc, dur);
+                    System.out.println(td + "." + tm + "." + ty);
+                }
+            }
+        }
+        m.createEventsToCalendar(courseid);
+        if (m.getCalendar() != null) System.out.println(m.getCalendar().size());
     }
 
     public void deleteCourseEvents() {
         // courseID
 
         // deleteCourseEvents(Course id);
+    }
+
+    public void updateWeekView(int year, int week) {
+        curYear = year;
+        curWeek = week;
+        
+        weekEvents = m.getWeek(year, week);
+
+
+    
     }
 
 
@@ -747,12 +935,13 @@ public class GUI extends JFrame
      * that players current statistics.
      *
      */
-    public void updateEventInfo(String[] event) {
-        eventProperties.setText("Tapahtuma:  \t"+ event[3] +"\n" +
-                                "Päivämäärä:   \t" + "\n" +
-                                "Kello: "+ event[1] +" - " + event[2] + "\n" +
-                                "Paikka: "+ event[4] +" \n" +
-                                "Omat merkinnät: " + event[5] + "\n");
+    public void updateEventInfo(Event e) {
+        eventProperties.setText(e.getName() +"\n" +
+                                "Päivämäärä: " + parseDate(e.getStarttime()) + "\n" +
+                                "Kello: "+ e.getStarttime().get(Calendar.HOUR_OF_DAY) +" - "
+                                         + e.getEndtime().get(Calendar.HOUR_OF_DAY) + "\n" +
+                                "Paikka: "+ e.getLocation() +" \n" +
+                                "Omat merkinnät: " + e.getOwnMarkings() + "\n");
         repaint();
     }
 

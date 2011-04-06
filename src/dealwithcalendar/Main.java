@@ -46,7 +46,8 @@ public class Main {
     public Course getCourse(int courseID){
         return courses.get(courseID);
     }
-    private boolean createEventsToCalendar(Course source){
+    public boolean createEventsToCalendar(int id){
+        Course source = courses.get(id);
         ArrayList<Event> generated = source.generateEvents();
         if(generated == null)
             return false;
@@ -66,7 +67,7 @@ public class Main {
         Event e = new Event(starttime, endtime, location, name, courseID);
         currentCalendar.addEvent(e);
     }
-
+   
     public void changeEventStarttime(Event e, Calendar starttime){
         e.setStarttime(starttime);
     }
@@ -115,6 +116,10 @@ public class Main {
 
     }
 
+     public void addCourseExam(Course id, Calendar _testDate, String _location, int duration){
+        id.addExam(_testDate, _location, duration);
+    }
+
     public void changeCourseStart(int id, Calendar starttime){
         courses.get(id).setStart(starttime);
     }
@@ -152,6 +157,10 @@ public class Main {
 
     public ArrayList<Event> getWeek(int year, int week){
         return currentCalendar.getEventsOfWeek(year, week);
+    }
+
+    public ArrayList<Event> getCalendar(){
+        return currentCalendar.getEvents();
     }
 
     public ArrayList<Event> getWeek(Calendar date){

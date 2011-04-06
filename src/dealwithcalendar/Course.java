@@ -187,7 +187,7 @@ public class Course implements Comparable<Course>, Serializable {
                 // System.out.println("FOUND TEST!");
                 starttime = (Calendar)current.getTime().clone();
                 endtime = getEndtime(current.getDuration(), starttime);
-                eventName = nickname + " exam";
+                eventName = "Tentti: " + nickname;
                 Event generatedTest = new Event(starttime, endtime, current.getLocation(), eventName, id);
                 generatedEvents.add(generatedTest);
             }
@@ -203,10 +203,10 @@ public class Course implements Comparable<Course>, Serializable {
                     starttime.set(Calendar.MILLISECOND, 0);
                     endtime = getEndtime(current.getDuration(), starttime);
                     if(current.getType() == courseEvent.LECTURE){
-                        eventName = nickname + " lecture";
+                        eventName = "L: " +nickname;
                         // System.out.println("Creating lecture");
                     }else if (current.getType() == courseEvent.STUDYGROUP){
-                        eventName = nickname + " studygroup";
+                        eventName = "LH: "+ nickname;
                         // System.out.println("Creating studygroup");
                     }else
                         eventName = nickname;

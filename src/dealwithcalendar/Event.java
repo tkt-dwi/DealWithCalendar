@@ -19,6 +19,7 @@ public class Event implements Comparable<Event>, Serializable{
     private int courseID = -1;
     private String location;
     private String name;
+    private String ownMarkings = "";
     boolean attending = false;
 
     /**
@@ -46,6 +47,7 @@ public class Event implements Comparable<Event>, Serializable{
         this.courseID = _courseID;
     }
 
+
     private void initializeFields(Calendar _starttime, Calendar _endtime, String _location, String _name) {
         this.starttime = _starttime;
         this.endtime = _endtime;
@@ -53,8 +55,13 @@ public class Event implements Comparable<Event>, Serializable{
         this.name = _name;
     }
 
+    public void setOwnMarkings(String om) {
+        this.ownMarkings = om;
+    }
 
-
+    public String getOwnMarkings() {
+        return this.ownMarkings;
+    }
 
     public String getLocation() {
         return location;
