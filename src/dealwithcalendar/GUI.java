@@ -140,7 +140,6 @@ public class GUI extends JFrame
      private JComboBox pickTestMonth = new JComboBox(months);
      private JComboBox pickTestYear = new JComboBox(years);
      private JComboBox pickCourse = new JComboBox();
-     private JButton inspectCourse = new JButton("Tarkastele kurssia");;
      private JButton addSelectedEvents = new JButton ("Lisää valitut tapahtumat kalenteriin");
      private JPanel courseViewMain = new JPanel(new BorderLayout());
      private JPanel courseViewUpper = new JPanel(new FlowLayout());
@@ -288,11 +287,7 @@ public class GUI extends JFrame
         pickCourse.setFont(new Font("sansserif", Font.BOLD, 12));
         pickCourse.setBackground(new Color(100,125,150));
         pickCourse.setForeground(new Color(0,0,0));
-
-        inspectCourse.setBackground(new Color(100,125,150, 0));
-        inspectCourse.setFont(new Font("sansserif", Font.PLAIN, 15));
-        inspectCourse.setMargin(margins);
-        inspectCourse.addActionListener(this);
+        pickCourse.addActionListener(this);
 
         // generate general course info into courseinfo JPanel here
         
@@ -459,7 +454,6 @@ public class GUI extends JFrame
         addSelectedEvents.addActionListener(this);
 
         courseViewUpper.add("West", pickCourse);
-        courseViewUpper.add("East", inspectCourse);
         courseViewLower.add("North", courseInfo);
         courseViewLower.add(courseEventGrid);
         courseViewLower.add("South", addSelectedEvents);
@@ -573,7 +567,7 @@ public class GUI extends JFrame
         Object source = act.getSource();
 
         // menu and main functions
-        if (source == quit) System.exit(0);
+        if (source == quit) exit();
         if (source == weekView) createWeekView(curYear, curWeek);
         if (source == monthView) openSaveFileDialog();
         if (source == CoursesView) createCoursesView();
@@ -598,8 +592,8 @@ public class GUI extends JFrame
         }
 
         // course view
-        if (source == inspectCourse) updateCourseInformation();
         if (source == addSelectedEvents) addCourseEvents();
+        if (source == pickCourse) updateCourseInformation();
 
         if (source==addEvent) addEventToCalendar();
 
@@ -753,7 +747,7 @@ public class GUI extends JFrame
             courseEvent e = ce.get(i);
             if (e.getType() != 3) {
                 courseEventType[i].setSelectedIndex(e.getType());
-                courseEventDays[i].setSelectedIndex(e.getWeekday());
+                courseEventDays[i].setSelectedIndex(e.getWeekday()-1);
                 courseEventSTime[i].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY));
                 courseEventETime[i].setSelectedIndex(e.getTime().get(Calendar.HOUR_OF_DAY) + (ce.get(i).getDuration()/60));
                 courseEventLoc[i].setText(e.getLocation());
@@ -841,7 +835,22 @@ public class GUI extends JFrame
             }
         }
         m.createEventsToCalendar(courseid);
-        if (m.getCalendar() != null) System.out.println(m.getCalendar().size());
+
+        try {
+                m.writeData();
+            }
+            catch (IOException e) {}
+    }
+
+    public void exit() {
+
+        try {
+                m.writeData();
+            }
+            catch (IOException e) {}
+
+        System.exit(0);
+
     }
 
     public void addEventToCalendar() {
@@ -861,6 +870,11 @@ public class GUI extends JFrame
 
         m.removeEvent(addE);
         m.addEvent(addE);
+
+        try {
+            m.writeData();
+        }
+        catch (IOException e) {}
 
         createWeekView(curYear, curWeek);
         repaint();

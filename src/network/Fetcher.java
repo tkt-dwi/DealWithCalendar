@@ -1,5 +1,6 @@
 package network;
 
+import dealwithcalendar.Course;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 import java.io.*;
@@ -157,8 +158,18 @@ public class Fetcher
 			} else
 			    if(debug2) System.out.println("Found invalid key " + split2[0] + " for block\n" + block + "\n");
 		    }
-
-		    courses.add(new dealwithcalendar.Course(start, end, name, -1, -1));//add the new course
+                    Course c = new dealwithcalendar.Course(start, end, name, -1, -1);
+                    boolean dontAdd = false;
+                    
+                    for (int k = 0; k < courses.size(); k++) {
+                        if (courses.get(k).compareTo(c) == 0) {
+                            dontAdd = true;
+                            break;
+                        }
+                    }
+                    if (!dontAdd) {
+                        courses.add(c);//add the new course
+                    }
 		    if(debug) System.out.println("Added " + name + "!");
                 }
 	for(int lol=0;lol<courses.size();lol++)

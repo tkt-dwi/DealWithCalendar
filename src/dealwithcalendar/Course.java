@@ -76,7 +76,18 @@ public class Course implements Comparable<Course>, Serializable {
      * @return Negative if this.id is smaller, positive if not, 0 if they're equal
      */
     public int compareTo(Course _c) {
-        return this.id - _c.id;
+        if (this.start.before(_c.start))
+            return -1;
+        if (this.start.after(_c.start))
+            return 1;
+        if (this.end.before(_c.end))
+            return -1;
+        if (this.end.after(_c.end))
+            return 1;
+        if (!this.name.equals(_c.name))
+            return this.name.compareTo(_c.name);
+
+        else return 0;
     }
 
     public int getCr() {

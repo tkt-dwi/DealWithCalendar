@@ -5,6 +5,10 @@
 
 package dealwithcalendar;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,15 +22,33 @@ public class Main {
     private dwiCalendar currentCalendar;
     private HashMap<Integer, Course> courses;
     private String address;
+    private String calendarName = "mycalendar.cld";
+    private String courseName = "mycourses.crs";
     /**
      * @param args the command line arguments
      */
 
-    public Main (){
-	//This constructor is bullshit, this data would really come from file
-        // 
-        currentCalendar = new dwiCalendar(2011);
-        courses = new HashMap<Integer, Course>();
+    public Main () throws IOException {
+        // this constructor is TIMANTTIA
+        File f = new File(calendarName);
+        if (f.exists()) {
+            //FileOperations.startRead(calendarName);
+            currentCalendar = FileOperations.readDWICalendar(calendarName);
+            //courses = new HashMap<Integer, Course>();
+        }
+        else {
+            currentCalendar = new dwiCalendar(2011);
+        }
+
+        f = new File(courseName);
+        if (f.exists()) {
+            
+            courses = FileOperations.readCourses(courseName);
+            //courses = new HashMap<Integer, Course>();
+        }
+        else {
+            courses = new HashMap<Integer, Course>();
+        }
 
 	//TODO: load the stored data here
 
@@ -34,13 +56,23 @@ public class Main {
 	network.Fetcher fetcher = new network.Fetcher(address);
         ArrayList<Course> remoteCourses = fetcher.read();
         addCourses(remoteCourses);
+
+
     }
 
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws IOException {
         Main main = new Main();
         GUI gui = new GUI(main);
+
+        
+    }
+
+
+
+    public void writeData() throws IOException{
+        FileOperations.writeCalendar(currentCalendar, calendarName);
+        FileOperations.writeCourseEvents(courses, courseName);
     }
 
     public Course getCourse(int courseID){
@@ -180,6 +212,8 @@ public class Main {
     }
 
     private int getNextFreeID(){
+        if (courses == null) return 0;
+
         int ID = 0;
         while(true){
             if(!courses.containsKey(ID)){

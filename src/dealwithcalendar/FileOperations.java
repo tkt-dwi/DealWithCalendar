@@ -34,19 +34,19 @@ public class FileOperations{
      * @param name Name of the file to write to
      * @throws IOException
      */
-    public static void startWrite(dwiCalendar calendar, HashMap<Integer, Course> courses, String name) throws IOException{
-         try {
-            file = new FileOutputStream(name);
-            buffer = new BufferedOutputStream(file);
-            output = new ObjectOutputStream(buffer);
-
-        } catch (IOException ex) {
-            System.out.println("Could not save the calendar and events to file");
-        }
-         writeCalendar(calendar);
-         writeCourseEvents(courses);
-
-    }
+//    public static void startWrite(dwiCalendar calendar, HashMap<Integer, Course> courses, String name) throws IOException{
+//         try {
+//            file = new FileOutputStream(name);
+//            buffer = new BufferedOutputStream(file);
+//            output = new ObjectOutputStream(buffer);
+//
+//        } catch (IOException ex) {
+//            System.out.println("Could not save the calendar and events to file");
+//        }
+//         writeCalendar(calendar);
+//         writeCourseEvents(courses);
+//
+//    }
 
     /**
      * Closes the file that the writing operations used
@@ -62,9 +62,18 @@ public class FileOperations{
      * @param courses
      * @throws IOException
      */
-    public static void writeCourseEvents(HashMap<Integer, Course> courses) throws IOException{
+    public static void writeCourseEvents(HashMap<Integer, Course> courses, String name) throws IOException{
+        try {
+            file = new FileOutputStream(name);
+            buffer = new BufferedOutputStream(file);
+            output = new ObjectOutputStream(buffer);
+
+        } catch (IOException ex) {
+            System.out.println("Could not save the calendar and events to file");
+        }
         try {
             output.writeObject(courses);
+            output.close();
         }catch (IOException ex) {
             System.out.println("Could not save the calendar and events to file");
         }
@@ -74,9 +83,18 @@ public class FileOperations{
      * Writes the calendar given as parameter to a file name 'mycalendar.cld'
      * @param calendar dwiCalendar that will be written
      */
-    public static void writeCalendar(dwiCalendar calendar) {
+    public static void writeCalendar(dwiCalendar calendar, String name) {
+        try {
+            file = new FileOutputStream(name);
+            buffer = new BufferedOutputStream(file);
+            output = new ObjectOutputStream(buffer);
+
+        } catch (IOException ex) {
+            System.out.println("Could not save the calendar and events to file");
+        }
         try {
             output.writeObject(calendar);
+            output.close();
 
         } catch (IOException ex) {
             System.out.println("Could not save the calendar and events to file");
@@ -89,17 +107,17 @@ public class FileOperations{
      * @param name Name of the file to be read
      */
 
-    public static void startRead(String name){
-        try{
-      //use buffering
-            fileIn = new FileInputStream(name);
-            bufferIn = new BufferedInputStream( fileIn );
-            input = new ObjectInputStream ( bufferIn );
-        }catch(IOException ex){
-        System.out.println("Error. Could not open file");
-        }
-
-    }
+//    public static void startRead(String name){
+//        try{
+//      //use buffering
+//            fileIn = new FileInputStream(name);
+//            bufferIn = new BufferedInputStream( fileIn );
+//            input = new ObjectInputStream ( bufferIn );
+//        }catch(IOException ex){
+//        System.out.println("Error. Could not open file");
+//        }
+//
+//    }
     /**
      * Closes the file thats been read
      * @throws IOException
@@ -113,7 +131,15 @@ public class FileOperations{
      * @return the saved HashMap
      * @throws IOException
      */
-    public static HashMap<Integer, Course> readCourses() throws IOException{
+    public static HashMap<Integer, Course> readCourses(String name) throws IOException{
+        try{
+      //use buffering
+            fileIn = new FileInputStream(name);
+            bufferIn = new BufferedInputStream( fileIn );
+            input = new ObjectInputStream ( bufferIn );
+        }catch(IOException ex){
+        System.out.println("Error. Could not open file");
+        }
         try{
           //HashMap<Integer, Course> courses = null;
           HashMap<Integer, Course> savedCourses = null;
@@ -133,7 +159,15 @@ public class FileOperations{
      * Reads saved information and events of dwiCalendar from file
      * @return dwiCalendar object read from file.
      */
-    public static dwiCalendar readDWICalendar() throws IOException{
+    public static dwiCalendar readDWICalendar(String name) throws IOException{
+        try{
+      //use buffering
+            fileIn = new FileInputStream(name);
+            bufferIn = new BufferedInputStream( fileIn );
+            input = new ObjectInputStream ( bufferIn );
+        }catch(IOException ex){
+        System.out.println("Error. Could not open file");
+        }
       try{
           dwiCalendar calendar = null;
 
