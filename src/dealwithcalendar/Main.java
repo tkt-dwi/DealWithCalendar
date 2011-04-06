@@ -67,7 +67,11 @@ public class Main {
         Event e = new Event(starttime, endtime, location, name, courseID);
         currentCalendar.addEvent(e);
     }
-   
+
+    public void addEvent(Event e) {
+        currentCalendar.addEvent(e);
+    }
+
     public void changeEventStarttime(Event e, Calendar starttime){
         e.setStarttime(starttime);
     }

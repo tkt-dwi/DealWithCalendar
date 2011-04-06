@@ -95,6 +95,10 @@ public class Event implements Comparable<Event>, Serializable{
         this.attending = attending;
     }
 
+    public void setName(String n){
+        this.name = n;
+    }
+
     public String getName(){
         return name;
     }

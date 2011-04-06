@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 
 import java.io.*;
 import java.util.*;
-import java.text.*;
 
 
 import java.awt.event.*;
@@ -24,7 +23,6 @@ import java.awt.Insets;
 import java.awt.Font;
 import java.awt.FileDialog;
 import java.awt.Dimension;
-import java.awt.Container;
 
 public class GUI extends JFrame
                             implements ActionListener {
@@ -33,15 +31,18 @@ public class GUI extends JFrame
      HashMap<Integer, Course> crs;
      ArrayList<Event> weekEvents;
 
+
      private Event curEvent = null;
+     private Event addE = null;
      private int curYear = Calendar.getInstance().get(Calendar.YEAR);
      private int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
      private static final int WEEKDAYS = 7;
      private static final int HOURS = 24;
      private static final int MONTHS = 12;
-     JButton[][] calendarButtons; // not private because of tests
-     int[][] calendarEvents; // array to store week events
-     JPanel calendarWhole; // not private because of tests
+
+     private JButton[][] calendarButtons; 
+     private int[][] calendarEvents; // array to store week events
+     private JPanel calendarWhole; 
      private Insets margins = new Insets(0,0,0,0); // insets for calendarButtons
 
      // general button for constructing calendarButtons
@@ -66,6 +67,7 @@ public class GUI extends JFrame
      private JMenuItem CoursesView = new JMenuItem("Selaa kursseja");
      private JMenuItem addCourseView = new JMenuItem("Lisää kurssi");
 
+     
      // weekNumber indicator
      JTextField weekNumber = new JTextField(curYear + "VIIKKO " + curWeek);
      
@@ -107,7 +109,9 @@ public class GUI extends JFrame
      private JTextArea eventProperties = new JTextArea(eventEmpty, 5, 30);
      private JTextArea eventOwnMarkings = new JTextArea("", 7, 30);
      private JPanel eventInfo = new JPanel(new BorderLayout());
-     
+
+     private JButton addEvent = new JButton("Lisää / muuta tapahtuman tiedot");
+    
      // different panels, boxes, etc. for constructing UI
 
      // week Calendar
@@ -155,8 +159,17 @@ public class GUI extends JFrame
      private JTextField[] courseEventLoc = new JTextField[8];
      private JCheckBox[] courseEventSel = new JCheckBox[8];
 
-
-
+     // add / change event view
+     JFrame eventWindow;
+     JPanel Event;
+    JTextField eName;
+    JTextField ePlace;
+    JTextArea eOM;
+    JComboBox eYear;
+    JComboBox eMonth;
+    JComboBox eDay;
+    JComboBox eeTime;
+    JComboBox esTime;
 
     
     /**
@@ -171,9 +184,10 @@ public class GUI extends JFrame
         m = main;
         crs = m.getCourses();
         mapCourses();
-
         weekEvents = m.getWeek(curYear, curWeek);
-        
+
+        addEvent.addActionListener(this);
+
         UIManager.put("Button.disabledText", Color.WHITE);
 
         // CONSTRUCT STANDARD WEEK VIEW
@@ -529,7 +543,10 @@ public class GUI extends JFrame
 
     }
 
-   /**
+   
+
+
+    /**
     * Action listener for GUI. Handles all actions.
     *
     * @param act ActionEvent to which reaction is needed
@@ -550,13 +567,13 @@ public class GUI extends JFrame
         if (source == bPrev) createWeekView(curYear, curWeek -1) ;
         if (source == bNext) createWeekView(curYear, curWeek +1);
         if (source == saveEventMarkings) saveOwnMarkings();
-        
+                
         for (byte i = 0; i < HOURS ; i++) {
             for (byte j = 0; j < WEEKDAYS; j++) {
                 if (source == calendarButtons[i][j]) {
                     if (calendarEvents[i][j] >= 0)
                         updateEventInfo(weekEvents.get(calendarEvents[i][j]));
-                    else { openInfoWindow(); }
+                    else { openEventWindow(i, j); }
                 }
             }
         }
@@ -565,12 +582,13 @@ public class GUI extends JFrame
         if (source == inspectCourse) updateCourseInformation();
         if (source == addSelectedEvents) addCourseEvents();
 
+        if (source==addEvent) addEventToCalendar();
+
     }
 
     public void saveOwnMarkings() {
-        m.changeEventOwnMarkings(curEvent, eventOwnMarkings.getText());
-
-
+        if (curEvent != null)
+            m.changeEventOwnMarkings(curEvent, eventOwnMarkings.getText());
     }
 
     public void mapCourses() {
@@ -794,6 +812,29 @@ public class GUI extends JFrame
         if (m.getCalendar() != null) System.out.println(m.getCalendar().size());
     }
 
+    public void addEventToCalendar() {
+        eventWindow.setVisible(false);
+
+        if (eName.getText().equals("nimi"))
+            return;
+        else addE.setName(eName.getText());
+        
+        if (ePlace.getText().equals("paikka"))
+            addE.setLocation("");
+        else addE.setLocation(ePlace.getText());
+
+        if (eOM.getText().equals("lisämerkinnät"))
+            addE.setOwnMarkings("");
+        else addE.setOwnMarkings(eOM.getText());
+
+        m.addEvent(addE);
+        
+        
+        repaint();
+
+
+    }
+
     public void deleteCourseEvents() {
         // courseID
 
@@ -961,52 +1002,158 @@ public class GUI extends JFrame
      * it's developer and version number. Game is playable
      * while JFrame is open.
      */
-    public void openInfoWindow() {
-        JFrame infoWindow = new JFrame("Lisää uusi tapahtuma");
+    public void openEventWindow(int i, int j) {
+        Calendar st = Calendar.getInstance();
+        Calendar et = Calendar.getInstance();
+        int wd = j;
+        if (wd == 6) wd = 1;
+        else wd = wd+2;
+        
+        st.set(Calendar.YEAR, curYear);
+        st.set(Calendar.WEEK_OF_YEAR, curWeek);
+        st.set(Calendar.DAY_OF_WEEK, wd);
+        st.set(Calendar.HOUR_OF_DAY, i);
+        st.set(Calendar.MINUTE, 1);
+        st.set(Calendar.SECOND, 0);
+        st.getTime();
 
-        String project = "Voit lisätä tapahtuman tästä";
-        JTextArea aboutProject = new JTextArea(project);
-        aboutProject.setAlignmentX(CENTER_ALIGNMENT);
-        aboutProject.setAlignmentY(CENTER_ALIGNMENT);
-        aboutProject.setFont(new Font("sansserif", Font.PLAIN, 15));
-        aboutProject.setBackground(Color.WHITE);
-        aboutProject.setForeground(Color.DARK_GRAY);
-        aboutProject.setEditable(false);
+        if (i == 23) { 
+            i = 0;
+            wd++;
+            if (wd == 8)
+                wd = 1;
+        }
 
-        JTextField developer = new JTextField("", 5);
-        developer.setFont(new Font("sansserif", Font.BOLD, 12));
-        developer.setBackground(Color.WHITE);
-        developer.setForeground(Color.DARK_GRAY);
-        developer.setEditable(false);
+        et.set(Calendar.YEAR, curYear);
+        et.set(Calendar.WEEK_OF_YEAR, curWeek);
+        et.set(Calendar.DAY_OF_WEEK, wd);
+        et.set(Calendar.HOUR_OF_DAY, i+1);
+        et.set(Calendar.MINUTE, 1);
+        et.set(Calendar.SECOND, 0);
+        et.getTime();
 
-        JTextField version = new JTextField("");
-        version.setFont(new Font("sansserif", Font.BOLD, 12));
-        version.setBackground(Color.WHITE);
-        version.setForeground(Color.DARK_GRAY);
-        version.setEditable(false);
+        Event e = new Event(st, et, "", "", -1);
+        e.setOwnMarkings("");
+      
+        createEventWindow(e);
+    }
+
+    public void createEventWindow(Event e) {
+        if (eventWindow != null)
+            eventWindow.hide();
+        
+        eventWindow = new JFrame("Lisää/muuta tapahtuman tietoja");
+
+        eName = new JTextField("");
+        ePlace = new JTextField("");
+        eOM = new JTextArea(5, 30);
+        eYear = new JComboBox(years);
+        eMonth = new JComboBox(months);
+        eDay = new JComboBox(monthdays);
+        eeTime = new JComboBox(hrs);
+        esTime = new JComboBox(hrs);
+        
+        eeTime.setSelectedIndex(12);
+        esTime.setSelectedIndex(12);
+
+        addE = e;
+       
+        if (e.getName().equals(""))
+            eName.setText("nimi");
+        else eName.setText(e.getName());
+
+        if (e.getLocation().equals(""))
+            ePlace.setText("paikka");
+        else ePlace.setText(e.getLocation());
+
+        if (e.getOwnMarkings().equals(""))
+            eOM.setText("lisämerkinnät");
+        else eOM.setText(e.getOwnMarkings());
+
+        eDay.setSelectedIndex(e.getStarttime().get(Calendar.DAY_OF_MONTH) -1);
+        eMonth.setSelectedIndex(e.getStarttime().get(Calendar.MONTH));
+        eYear.setSelectedIndex(e.getStarttime().get(Calendar.YEAR) - Calendar.getInstance().get(Calendar.YEAR));
+        eeTime.setSelectedIndex(e.getEndtime().get(Calendar.HOUR_OF_DAY));
+        esTime.setSelectedIndex(e.getStarttime().get(Calendar.HOUR_OF_DAY));
+       
+
+        Event = new JPanel(new FlowLayout());
+        Event.setFont(new Font("sansserif", Font.BOLD, 12));
+        Event.setBackground(new Color(100,125,150, 100));
+        Event.setForeground(new Color(0,0,0));
+
+        eName.setPreferredSize(new Dimension(120,20));
+        eName.setFont(new Font("sansserif", Font.BOLD, 12));
+        eName.setEditable(true);
+        Event.add(eName);
+
+        eDay.setPreferredSize(new Dimension(50,20));
+        eDay.setFont(new Font("sansserif", Font.BOLD, 12));
+        eDay.setBackground(new Color(100,125,150));
+        eDay.setForeground(new Color(0,0,0));
+        Event.add(eDay);
+
+        eMonth.setPreferredSize(new Dimension(50,20));
+        eMonth.setFont(new Font("sansserif", Font.BOLD, 12));
+        eMonth.setBackground(new Color(100,125,150));
+        eMonth.setForeground(new Color(0,0,0));
+        Event.add(eMonth);
+
+        eYear.setPreferredSize(new Dimension(70,20));
+        eYear.setFont(new Font("sansserif", Font.BOLD, 12));
+        eYear.setBackground(new Color(100,125,150));
+        eYear.setForeground(new Color(0,0,0));
+        Event.add(eYear);
+
+        esTime.setPreferredSize(new Dimension(70,20));
+        esTime.setFont(new Font("sansserif", Font.BOLD, 12));
+        esTime.setBackground(new Color(100,125,150));
+        esTime.setForeground(new Color(0,0,0));
+        Event.add(esTime);
+
+        eeTime.setPreferredSize(new Dimension(70,20));
+        eeTime.setFont(new Font("sansserif", Font.BOLD, 12));
+        eeTime.setBackground(new Color(100,125,150));
+        eeTime.setForeground(new Color(0,0,0));
+        Event.add(eeTime);
+
+        ePlace.setPreferredSize(new Dimension(120,20));
+        ePlace.setFont(new Font("sansserif", Font.PLAIN, 12));
+        ePlace.setBackground(new Color(255,255,255));
+        ePlace.setForeground(new Color(0,0,0));
+        ePlace.setEditable(true);
+        Event.add(ePlace);
+
+        addEvent.setPreferredSize(new Dimension(120,20));
+        addEvent.setFont(new Font("sansserif", Font.BOLD, 12));
+        addEvent.setBackground(new Color(100,125,150));
 
         JPanel layout = new JPanel(new BorderLayout());
-        JPanel lower = new JPanel(new BorderLayout());
+        JPanel ev = new JPanel(new BorderLayout());
 
-        lower.add("North", developer);
-        lower.add("South", version);
-        layout.add("North", aboutProject);
-        layout.add("South", lower);
+        ev.add("North", Event);
+        ev.add("South", eOM);
+        layout.add("North", ev);
+        layout.add("South", addEvent);
 
-        infoWindow.add(layout);
-        infoWindow.setPreferredSize(new Dimension (250, 150));
-        infoWindow.pack();
-        infoWindow.setResizable(false);
-        infoWindow.setLocation(getLocationOnScreen());
-        infoWindow.show();
-        infoWindow.toFront();
-        infoWindow.setVisible(true);
+        Event.validate();
+
+        eventWindow.add(layout);
+        eventWindow.pack();
+        eventWindow.setResizable(false);
+        eventWindow.setLocation(getLocationOnScreen());
+        eventWindow.validate();
+        eventWindow.show();
+        eventWindow.toFront();
+        eventWindow.setVisible(true);
+
+
     }
-    
+
+
 }
 
 
-            
             
 
         
