@@ -859,12 +859,10 @@ public class GUI extends JFrame
             addE.setOwnMarkings("");
         else addE.setOwnMarkings(eOM.getText());
 
+        m.removeEvent(addE);
         m.addEvent(addE);
 
-        weekEvents = m.getWeek(curYear, curWeek);
-
-        
-        
+        createWeekView(curYear, curWeek);
         repaint();
 
 
