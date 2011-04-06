@@ -33,6 +33,7 @@ public class GUI extends JFrame
      HashMap<Integer, Course> crs;
      ArrayList<Event> weekEvents;
 
+     private Event curEvent = null;
      private int curYear = Calendar.getInstance().get(Calendar.YEAR);
      private int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
      private static final int WEEKDAYS = 7;
@@ -67,25 +68,16 @@ public class GUI extends JFrame
 
      // weekNumber indicator
      JTextField weekNumber = new JTextField(curYear + "VIIKKO " + curWeek);
-
-
-
-     // dummy week for prototype
-     String[][] dw = {{"1", "8", "10", "Ohtu", "CK111", ""},
-                             {"2", "10", "12", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
-
-     String[][] dummyWeek2 = {{"2", "8", "10", "Ohtu", "CK111", ""},
-                             {"3", "10", "14", "Ohtu, laskarit", "B119", "Joel Spolsky: Painless functional \nspecifications osa 1 ja Painless functional \nspecifications osa 2"}};
-
+     
      String[] dc; // Course names for pickCourse combobox
      private int[] comboToCourseID; // maps pickCourse combobox's indexes to courseID's;
 
      // event infos
-     private String eventEmpty ="Kurssi:  \t \n" +
+     private String eventEmpty ="\t \n" +
                                 "Päivämäärä:   \t \n" +
                                 "Kello: - \n" +
                                 "Paikka: \n" +
-                                "Omat merkinnät: \n";
+                                "Omat merkinnät:";
 
      // 
      private String[] dayNames = {  "Sunnuntai",
@@ -111,8 +103,10 @@ public class GUI extends JFrame
 
 
      // text area and panel for showing event info details
-     private JTextArea eventProperties = new JTextArea(eventEmpty, 30, 30);
-     private JPanel eventInfo = new JPanel(new GridLayout(1,2));
+     private JButton saveEventMarkings = new JButton("Tallenna merkinnät");
+     private JTextArea eventProperties = new JTextArea(eventEmpty, 5, 30);
+     private JTextArea eventOwnMarkings = new JTextArea("", 7, 30);
+     private JPanel eventInfo = new JPanel(new BorderLayout());
      
      // different panels, boxes, etc. for constructing UI
 
@@ -239,7 +233,15 @@ public class GUI extends JFrame
         eventProperties.setEditable(false);
         eventProperties.setLineWrap(true);
         eventProperties.setWrapStyleWord(true);
-        eventInfo.add(eventProperties);
+
+        saveEventMarkings.setFont(new Font("sansserif", Font.BOLD, 12));
+        saveEventMarkings.setBackground(new Color(100,125,150));
+        saveEventMarkings.setForeground(new Color(0,0,0));
+        saveEventMarkings.addActionListener(this);
+
+        eventInfo.add("North", eventProperties);
+        eventInfo.add(eventOwnMarkings);
+        eventInfo.add("South", saveEventMarkings);
 
         // construct default view of right side of UI
         rightUIPanel.add("North", eventInfo);
@@ -547,6 +549,7 @@ public class GUI extends JFrame
         // week view
         if (source == bPrev) createWeekView(curYear, curWeek -1) ;
         if (source == bNext) createWeekView(curYear, curWeek +1);
+        if (source == saveEventMarkings) saveOwnMarkings();
         
         for (byte i = 0; i < HOURS ; i++) {
             for (byte j = 0; j < WEEKDAYS; j++) {
@@ -561,6 +564,12 @@ public class GUI extends JFrame
         // course view
         if (source == inspectCourse) updateCourseInformation();
         if (source == addSelectedEvents) addCourseEvents();
+
+    }
+
+    public void saveOwnMarkings() {
+        m.changeEventOwnMarkings(curEvent, eventOwnMarkings.getText());
+
 
     }
 
@@ -671,7 +680,6 @@ public class GUI extends JFrame
         int courseid = comboToCourseID[pickCourse.getSelectedIndex()];
         updateCourseGeneralInfo(courseid);
         updateCourseEvents(courseid);
-
     }
 
     public String parseDate(Calendar c) {
@@ -936,12 +944,15 @@ public class GUI extends JFrame
      *
      */
     public void updateEventInfo(Event e) {
+        curEvent = e;
+
         eventProperties.setText(e.getName() +"\n" +
                                 "Päivämäärä: " + parseDate(e.getStarttime()) + "\n" +
                                 "Kello: "+ e.getStarttime().get(Calendar.HOUR_OF_DAY) +" - "
                                          + e.getEndtime().get(Calendar.HOUR_OF_DAY) + "\n" +
                                 "Paikka: "+ e.getLocation() +" \n" +
-                                "Omat merkinnät: " + e.getOwnMarkings() + "\n");
+                                "Omat merkinnät:");
+        eventOwnMarkings.setText(e.getOwnMarkings());
         repaint();
     }
 

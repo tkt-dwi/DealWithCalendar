@@ -25,7 +25,7 @@ public class Fetcher
      */
     public Fetcher(String _URL)
     {
-	debug = false;
+	debug = true;
 	debug2 = false;
 
 	if(debug) System.out.println("foo 1");
@@ -111,7 +111,7 @@ public class Fetcher
 				     if(debug2) System.out.println("Entering date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
-					     start.set(Integer.parseInt(split3[0]), Integer.parseInt(split3[1]), Integer.parseInt(split3[2]), 23, 59, 59);
+					     start.set(Integer.parseInt(split3[0]), Integer.parseInt(split3[1])-1, Integer.parseInt(split3[2]), 0, 0, 0);
 					     /*start.set(Calendar.YEAR, new Integer(split3[0])); //set the year as the year value
 					     start.set(Calendar.MONTH, new Integer(split3[1])); //set the month as the month value
 					     start.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //set the day as the day value
@@ -135,7 +135,7 @@ public class Fetcher
 				    if(debug2) System.out.println("Entering end date " + split2[1] + " for " + block + "\n");
 				     try
 				     {
-					     end.set(new Integer(split3[0]), new Integer(split3[1]), new Integer(split3[2]), 23, 59, 59);
+					     end.set(new Integer(split3[0]), new Integer(split3[1])-1, new Integer(split3[2]), 23, 59, 59);
 					     /*end.set(Calendar.YEAR, new Integer(split3[0])); //year as year
 					     end.set(Calendar.MONTH, new Integer(split3[1])); //month as month
 					     end.set(Calendar.DAY_OF_MONTH, new Integer(split3[2])); //day as day

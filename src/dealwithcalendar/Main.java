@@ -89,6 +89,10 @@ public class Main {
         e.setAttending(attending);
     }
 
+    public void changeEventOwnMarkings(Event e, String om) {
+        e.setOwnMarkings(om);
+    }
+
 
     /**
      * Tools to handle single course or create one
