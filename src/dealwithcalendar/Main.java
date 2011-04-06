@@ -72,6 +72,10 @@ public class Main {
         currentCalendar.addEvent(e);
     }
 
+    public void removeEvent(Event e) {
+        currentCalendar.removeEvents(e);
+    }
+
     public void changeEventStarttime(Event e, Calendar starttime){
         e.setStarttime(starttime);
     }

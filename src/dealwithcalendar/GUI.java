@@ -111,6 +111,9 @@ public class GUI extends JFrame
      private JPanel eventInfo = new JPanel(new BorderLayout());
 
      private JButton addEvent = new JButton("Lisää / muuta tapahtuman tiedot");
+     private JButton removeEvent = new JButton("Poista tapahtuma");
+     private JButton alterEvent = new JButton("Muokkaa tapahtumaa");
+     private JPanel eventButtons = new JPanel(new GridLayout(3,1));
     
      // different panels, boxes, etc. for constructing UI
 
@@ -248,14 +251,28 @@ public class GUI extends JFrame
         eventProperties.setLineWrap(true);
         eventProperties.setWrapStyleWord(true);
 
-        saveEventMarkings.setFont(new Font("sansserif", Font.BOLD, 12));
+        saveEventMarkings.setFont(new Font("sansserif", Font.BOLD, 15));
         saveEventMarkings.setBackground(new Color(100,125,150));
         saveEventMarkings.setForeground(new Color(0,0,0));
         saveEventMarkings.addActionListener(this);
 
+        removeEvent.setFont(new Font("sansserif", Font.BOLD, 15));
+        removeEvent.setBackground(new Color(100,125,150));
+        removeEvent.setForeground(new Color(0,0,0));
+        removeEvent.addActionListener(this);
+
+        alterEvent.setFont(new Font("sansserif", Font.BOLD, 15));
+        alterEvent.setBackground(new Color(100,125,150));
+        alterEvent.setForeground(new Color(0,0,0));
+        alterEvent.addActionListener(this);
+
+        eventButtons.add(saveEventMarkings);
+        eventButtons.add(alterEvent);
+        eventButtons.add(removeEvent);
+
         eventInfo.add("North", eventProperties);
         eventInfo.add(eventOwnMarkings);
-        eventInfo.add("South", saveEventMarkings);
+        eventInfo.add("South", eventButtons);
 
         // construct default view of right side of UI
         rightUIPanel.add("North", eventInfo);
@@ -567,6 +584,8 @@ public class GUI extends JFrame
         if (source == bPrev) createWeekView(curYear, curWeek -1) ;
         if (source == bNext) createWeekView(curYear, curWeek +1);
         if (source == saveEventMarkings) saveOwnMarkings();
+        if (source == alterEvent) alterEvent();
+        if (source == removeEvent) removeEvent();
                 
         for (byte i = 0; i < HOURS ; i++) {
             for (byte j = 0; j < WEEKDAYS; j++) {
@@ -755,6 +774,19 @@ public class GUI extends JFrame
         courseEventGrid.repaint();
     }
 
+    public void alterEvent() {
+        if (curEvent == null)
+            return;
+        else createEventWindow(curEvent);
+    }
+
+    public void removeEvent() {
+        m.removeEvent(curEvent);
+        curEvent = null;
+
+        createWeekView(curYear, curWeek);
+    }
+
     public void addCourseEvents() {
         int courseid = comboToCourseID[pickCourse.getSelectedIndex()];
         if (courseid < 0) return;
@@ -828,6 +860,9 @@ public class GUI extends JFrame
         else addE.setOwnMarkings(eOM.getText());
 
         m.addEvent(addE);
+
+        weekEvents = m.getWeek(curYear, curWeek);
+
         
         
         repaint();
