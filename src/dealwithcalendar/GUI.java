@@ -48,11 +48,12 @@ public class GUI extends JFrame
      private static final Color THEME_COLOR_BLUE = new Color(100,125,150, 100);
      private static final Color THEME_COLOR_LIGHTBLUE = new Color(100,125,150, 50);
      private static final Color THEME_COLOR_VLIGHTBLUE = new Color(100,125,150, 0);
-     private static final Color THEME_COLOR_OTHER = new Color(150,125,100, 50);
+     private static final Color THEME_COLOR_OTHER = new Color(150,125,100, 150);
      private static final Color THEME_COLOR_COTHER = new Color(200,125, 50, 150);
      private static final Color THEME_COLOR_CTEST = new Color(200,125,150, 200);
-     private static final Color THEME_COLOR_CLECTURE = THEME_COLOR_BLUE;
-     private static final Color THEME_COLOR_CSTUDYG = new Color(50,125,125, 150);
+     private static final Color THEME_COLOR_CSTUDYG = new Color(100,150,150, 100);
+     private static final Color THEME_COLOR_CLECTURE = new Color(50,125,125, 150);
+     private static final Color THEME_COLOR_CGUIDG = new Color(25,175,100, 100);
      private static final Font THEME_FONT_SMALL = new Font("sansserif", Font.BOLD, 12);
 
      // calendar view's hour buttons for each day
@@ -957,6 +958,10 @@ public class GUI extends JFrame
             calendarButtons[x][y].setBackground(THEME_COLOR_CSTUDYG);
             return;
         }
+        if (e.getType() == 2) {
+            calendarButtons[x][y].setBackground(THEME_COLOR_CGUIDG);
+            return;
+        }
         if (e.getType() == 3) {
             calendarButtons[x][y].setBackground(THEME_COLOR_CTEST);
             return;
@@ -1082,14 +1087,16 @@ public class GUI extends JFrame
         curEvent = e;
         String type = "";
 
-        if (e.getType() == 0) type = "luento";
-        if (e.getType() == 1) type = "laskuharjoitus";
-        if (e.getType() == 2) type = "ohjausryhmä";
-        if (e.getType() == 3) type = "tentti";
-        if (e.getType() == 4) type = "muu";
+
+        if (e.getType() == 0) type = ", luento";
+        if (e.getType() == 1) type = ", laskuharjoitus";
+        if (e.getType() == 2) type = ", ohjausryhmä";
+        if (e.getType() == 3) type = ", tentti";
+        if (e.getType() == 4) type = ", muu";
+        if (e.getCourseID() < 0) type = "";
 
 
-        eventProperties.setText(e.getName() + ", " + type + "\n" +
+        eventProperties.setText(e.getName() + type + "\n" +
                                 "Päivämäärä: " + parseDate(e.getStarttime()) + "\n" +
                                 "Kello: "+ e.getStarttime().get(Calendar.HOUR_OF_DAY) +" - "
                                          + e.getEndtime().get(Calendar.HOUR_OF_DAY) + "\n" +
