@@ -137,11 +137,12 @@ public class Main {
     /**
      * Tools to handle single course or create one
      */
-    public void addCourse(Calendar starttime, Calendar endtime, String name,
+    public int addCourse(Calendar starttime, Calendar endtime, String name,
                           int credits){
         int ID = getNextFreeID();
         Course c = new Course(starttime, endtime, name, ID, credits);
         courses.put(ID, c);
+        return ID;
     }
 
     public void addCourses(ArrayList<Course> courseArray){
