@@ -989,13 +989,8 @@ public class GUI extends JFrame
 
         // update courses
         mapCourses();
-        pickCourse = new JComboBox(dc);
-        
-
-
-
-
-
+        pickCourse.validate();
+        System.out.println(crs.size() + " / " + dc.length);
     }
 
     
@@ -1098,7 +1093,7 @@ public class GUI extends JFrame
         String filePath = saveWindow.getDirectory() +
            System.getProperty("file.separator") + saveWindow.getFile();
         
-        if (saveWindow.getFile() != null) m.printWeek(curWeek, filePath);
+        if (saveWindow.getFile() != null) m.writeWeekEventList(curYear, curWeek, filePath);
         
          
     }
