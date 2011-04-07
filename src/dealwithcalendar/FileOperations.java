@@ -148,7 +148,11 @@ public class FileOperations {
         return null;
     }
 
-    //TODO: Week text file writing!!
+    /**
+     * Static method for writing a certain week's events to a text file
+     * @param events ArrayList containing one week's events
+     * @param filename Name of the text file.
+     */
     public static void writeWeek(ArrayList<Event> events, String filename) {
         
         try {
