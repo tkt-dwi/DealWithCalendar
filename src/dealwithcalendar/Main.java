@@ -224,7 +224,8 @@ public class Main {
         return ID;
     }
 
-    public void printWeek (int week, String filename){
+    public void writeWeekEventList (int year, int week, String filename){
+        FileOperations.writeWeek(getWeek(year, week), filename);
     }
 
 

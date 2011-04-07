@@ -128,7 +128,7 @@ public class FileOperationsTest {
         
         FileOperations.writeWeek(oneWeek, "testWeek.txt");
         
-        File writtenFile = new File("testweek.txt");
+        File writtenFile = new File("testWeek.txt");
         
         assertTrue(writtenFile.exists());
     }
