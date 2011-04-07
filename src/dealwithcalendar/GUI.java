@@ -989,8 +989,6 @@ public class GUI extends JFrame
 
         // update courses
         mapCourses();
-        pickCourse.validate();
-        System.out.println(crs.size() + " / " + dc.length);
     }
 
     
