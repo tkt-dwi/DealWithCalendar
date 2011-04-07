@@ -209,6 +209,18 @@ public class GUI extends JFrame
     JComboBox eeTime;
     JComboBox esTime;
 
+    // add course event view
+    JFrame addCourseWindow;
+    JPanel Course;
+    JTextField crsName;
+    JComboBox crsSYear;
+    JComboBox crsSMonth;
+    JComboBox crsSDay;
+    JComboBox crsEYear;
+    JComboBox crsEMonth;
+    JComboBox crsEDay;
+    JButton addCourse = new JButton("Lisää kurssi");
+
     
     /**
      * Constructor to create GUI for calendar
@@ -225,6 +237,7 @@ public class GUI extends JFrame
         weekEvents = m.getWeek(curYear, curWeek);
 
         addEvent.addActionListener(this);
+        addCourse.addActionListener(this);
 
         UIManager.put("Button.disabledText", Color.WHITE);
 
@@ -608,9 +621,10 @@ public class GUI extends JFrame
         if (source == quit) exit();
         if (source == weekView) createWeekView(curYear, curWeek);
         if (source == monthView) openSaveFileDialog();
+        if (source == eventView) openEventWindow(0, 0);
         if (source == CoursesView) createCoursesView();
-        if (source == addCourseView) ;
-        if (source == saveWeek) ;
+        if (source == addCourseView) createAddCourseWindow();
+        if (source == saveWeek) openSaveFileDialog();
 
         // week view
         if (source == bPrev) createWeekView(curYear, curWeek -1) ;
@@ -633,7 +647,11 @@ public class GUI extends JFrame
         if (source == addSelectedEvents) addCourseEvents();
         if (source == pickCourse) updateCourseInformation();
 
+        // eventWindow
         if (source==addEvent) addEventToCalendar();
+
+        // addCourseWindow
+        if (source==addCourse) addCourseToCourses();
 
     }
 
@@ -937,6 +955,49 @@ public class GUI extends JFrame
 
     }
 
+    public void addCourseToCourses() {
+        if (crsName.getText().equals("nimi")) return;
+        if (crsName.getText().equals("")) return;
+
+        System.out.println(crs.size());
+
+        String crsn = crsName.getText();
+        int sy = Calendar.getInstance().get(Calendar.YEAR) + crsSYear.getSelectedIndex();
+        int ey = Calendar.getInstance().get(Calendar.YEAR) + crsEYear.getSelectedIndex();
+        int sm = crsSMonth.getSelectedIndex();
+        int em = crsEMonth.getSelectedIndex();
+        int sd = crsSDay.getSelectedIndex() +1;
+        int ed = crsEMonth.getSelectedIndex() +1;
+
+        if (sy >= ey) { // add only courses with atleast one day length
+            if (sm >= em) {
+                if (sd >= ed)
+                    return;
+            }
+        }
+
+        addCourseWindow.hide();
+
+        Calendar sc = Calendar.getInstance();
+        Calendar ec = Calendar.getInstance();
+        sc.set(sy,sm,sd, 0,0, 0);
+        ec.set(ey,em,ed, 23, 59, 59);
+
+        m.addCourse(sc, ec, crsn, 0);
+
+        System.out.println(crs.size());
+
+        // update courses
+        mapCourses();
+        pickCourse = new JComboBox(dc);
+        
+
+
+
+
+
+    }
+
     
     /**
      * Sets given slot {x, y} background color
@@ -1030,17 +1091,16 @@ public class GUI extends JFrame
      */
     public void openSaveFileDialog() {
         FileDialog saveWindow = new FileDialog(this, "Choose a file name to save", FileDialog.SAVE);
-        saveWindow.setFile("*.XOS");
-        saveWindow.setDirectory("Saves");
+        saveWindow.setFile("*.txt");
         saveWindow.setLocation(getLocationOnScreen());
         saveWindow.setSize(400, 500);
         saveWindow.show();
         String filePath = saveWindow.getDirectory() +
            System.getProperty("file.separator") + saveWindow.getFile();
-        /*
-        if (saveWindow.getFile() != null) game.saveGame(filePath);
-         *
-         */
+        
+        if (saveWindow.getFile() != null) m.printWeek(curWeek, filePath);
+        
+         
     }
 
     /**
@@ -1257,6 +1317,112 @@ public class GUI extends JFrame
         eventWindow.show();
         eventWindow.toFront();
         eventWindow.setVisible(true);
+
+
+    }
+
+    public void createAddCourseWindow() {
+        if (addCourseWindow != null)
+            addCourseWindow.hide();
+
+        addCourseWindow = new JFrame("Lisää kurssi");
+        crsName = new JTextField("nimi");
+        crsSDay = new JComboBox(monthdays);
+        crsSMonth = new JComboBox(months);
+        crsSYear = new JComboBox(years);
+        crsEDay = new JComboBox(monthdays);
+        crsEMonth = new JComboBox(months);
+        crsEYear = new JComboBox(years);
+
+        Course = new JPanel(new GridLayout(4,1));
+        Course.setFont(THEME_FONT_SMALL);
+        Course.setBackground(THEME_COLOR_BLUE);
+        Course.setForeground(new Color(0,0,0));
+
+        JPanel crsRow = new JPanel(new FlowLayout());
+        crsName.setText("nimi");
+        crsName.setPreferredSize(new Dimension(250,20));
+        crsName.setFont(THEME_FONT_SMALL);
+        crsName.setEditable(true);
+        crsRow.add(crsName);
+        Course.add(crsRow);
+        
+        crsRow = new JPanel(new FlowLayout());
+        JTextField cs = new JTextField("alkaa");
+        cs.setPreferredSize(new Dimension(100,20));
+        cs.setEditable(false);
+        cs.setFont(THEME_FONT_SMALL);
+        cs.setBackground(THEME_COLOR_VDARKBLUE);
+        cs.setForeground(new Color(0,0,0));
+        crsRow.add(cs);
+
+        crsSDay.setPreferredSize(new Dimension(50,20));
+        crsSDay.setFont(THEME_FONT_SMALL);
+        crsSDay.setBackground(THEME_COLOR_VDARKBLUE);
+        crsSDay.setForeground(new Color(0,0,0));
+        crsRow.add(crsSDay);
+        
+        crsSMonth.setPreferredSize(new Dimension(50,20));
+        crsSMonth.setFont(THEME_FONT_SMALL);
+        crsSMonth.setBackground(THEME_COLOR_VDARKBLUE);
+        crsSMonth.setForeground(new Color(0,0,0));
+        crsRow.add(crsSMonth);
+        
+        crsSYear.setPreferredSize(new Dimension(70,20));
+        crsSYear.setFont(THEME_FONT_SMALL);
+        crsSYear.setBackground(THEME_COLOR_VDARKBLUE);
+        crsSYear.setForeground(new Color(0,0,0));
+        crsRow.add(crsSYear);
+        Course.add(crsRow);
+
+        crsRow = new JPanel(new FlowLayout());
+        cs = new JTextField("päättyy");
+        cs.setPreferredSize(new Dimension(100,20));
+        cs.setEditable(false);
+        cs.setFont(THEME_FONT_SMALL);
+        cs.setBackground(THEME_COLOR_VDARKBLUE);
+        cs.setForeground(new Color(0,0,0));
+        crsRow.add(cs);
+
+        crsEDay.setPreferredSize(new Dimension(50,20));
+        crsEDay.setFont(THEME_FONT_SMALL);
+        crsEDay.setBackground(THEME_COLOR_VDARKBLUE);
+        crsEDay.setForeground(new Color(0,0,0));
+        crsRow.add(crsEDay);
+
+        crsEMonth.setPreferredSize(new Dimension(50,20));
+        crsEMonth.setFont(THEME_FONT_SMALL);
+        crsEMonth.setBackground(THEME_COLOR_VDARKBLUE);
+        crsEMonth.setForeground(new Color(0,0,0));
+        crsRow.add(crsEMonth);
+
+        crsEYear.setPreferredSize(new Dimension(70,20));
+        crsEYear.setFont(THEME_FONT_SMALL);
+        crsEYear.setBackground(THEME_COLOR_VDARKBLUE);
+        crsEYear.setForeground(new Color(0,0,0));
+        crsRow.add(crsEYear);
+        Course.add(crsRow);
+
+        addCourse.setPreferredSize(new Dimension(120,20));
+        addCourse.setFont(THEME_FONT_SMALL);
+        addCourse.setBackground(THEME_COLOR_VDARKBLUE);
+
+        Course.add(addCourse);
+        Course.validate();
+
+        addCourseWindow.add(Course);
+        addCourseWindow.pack();
+        addCourseWindow.setResizable(false);
+        addCourseWindow.setLocation(getLocationOnScreen());
+        addCourseWindow.validate();
+        addCourseWindow.show();
+        addCourseWindow.toFront();
+        addCourseWindow.setVisible(true);
+
+
+
+
+
 
 
     }
