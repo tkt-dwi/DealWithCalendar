@@ -660,6 +660,16 @@ public class GUI extends JFrame
             m.changeEventOwnMarkings(curEvent, eventOwnMarkings.getText());
     }
 
+    public void updateCourseMap(int id) {
+        int[] temp = new int[crs.size()];
+
+        for (int i = 0; i < comboToCourseID.length; i++) {
+            temp[i] = comboToCourseID[i];
+        }
+        temp[comboToCourseID.length] = id;
+        comboToCourseID = temp;
+    }
+
     public void mapCourses() {
         dc = new String[crs.size()];
         comboToCourseID = new int[crs.size()];
@@ -983,12 +993,18 @@ public class GUI extends JFrame
         sc.set(sy,sm,sd, 0,0, 0);
         ec.set(ey,em,ed, 23, 59, 59);
 
-        m.addCourse(sc, ec, crsn, 0);
+        int id = m.addCourse(sc, ec, crsn, 0);
 
         System.out.println(crs.size());
 
         // update courses
-        mapCourses();
+        pickCourse.addItem(crsn);
+        updateCourseMap(id);
+        
+        try {
+            m.writeData();
+        }
+        catch (IOException e) {}
     }
 
     
