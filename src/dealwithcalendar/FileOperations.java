@@ -188,6 +188,14 @@ public class FileOperations {
 
         } catch (IOException e) { // *I step back from the mic to WHY
             e.printStackTrace();
+        } catch (NullPointerException NPe) {
+        	if(events == null)
+        		System.err.println("writeWeek called with null event list");
+        	else if(events.get(0) == null)
+        		System.err.println("writeWeek called with empty event list");
+        	else if(events.get(0).getStarttime() == null)
+        		System.err.println("writeWeek: events.get(0) has no start time");
+        	NPe.printStackTrace();
         }
 
 

@@ -50,8 +50,6 @@ public class Main {
             courses = new HashMap<Integer, Course>();
         }
 
-	//TODO: load the stored data here
-
 	address = "http://www.cs.helsinki.fi/u/tkairi/rajapinta/courses.json";
 	network.Fetcher fetcher = new network.Fetcher(address);
         ArrayList<Course> remoteCourses = fetcher.read();
