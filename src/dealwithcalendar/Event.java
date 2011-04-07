@@ -8,6 +8,7 @@ package dealwithcalendar;
 
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -136,6 +137,13 @@ public class Event implements Comparable<Event>, Serializable{
                 && this.location.equalsIgnoreCase(e.location) && this.name.equalsIgnoreCase(e.name)
                 && (this.courseID == e.courseID));
 
+    }
+
+    @Override
+    public String toString(){
+        String startString = starttime.get(Calendar.HOUR_OF_DAY) + ":" + starttime.get(Calendar.MINUTE);
+        String endString = endtime.get(Calendar.HOUR_OF_DAY) + ":" + endtime.get(Calendar.MINUTE);
+        return name + "\nPaikka: " + location + "\nAlku: " + startString + "\nLoppu: " + endString + "\nMerkinnät: " + ownMarkings;
     }
 
 

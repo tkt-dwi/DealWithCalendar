@@ -13,9 +13,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Functions to read and write the calendar in use to a file
@@ -148,12 +150,62 @@ public class FileOperations {
 
     //TODO: Week text file writing!!
     public static void writeWeek(ArrayList<Event> events, String filename) {
+        
         try {
-            Writer output = new BufferedWriter(new FileWriter(filename));
-        } catch (IOException e) { //What has science DONE TODAY?!
+            PrintWriter out = new PrintWriter(new FileWriter(filename));
+            ArrayList<String> dailyEvents;
+            out.print("VIIKKO: " + events.get(0).getStarttime().get(Calendar.WEEK_OF_YEAR) + "\n\n********\n");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.MONDAY);
+            printDayEvents(dailyEvents, out, "MAANANTAI");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.TUESDAY);
+            printDayEvents(dailyEvents, out, "TIISTAI");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.WEDNESDAY);
+            printDayEvents(dailyEvents, out, "KESKIVIIKKO");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.THURSDAY);
+            printDayEvents(dailyEvents, out, "TORSTAI");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.FRIDAY);
+            printDayEvents(dailyEvents, out, "PERJANTAI");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.SATURDAY);
+            printDayEvents(dailyEvents, out, "LAUANTAI");
+
+            dailyEvents = getWeekDayEvents(events, Calendar.SUNDAY);
+            printDayEvents(dailyEvents, out, "SUNNUNTAI");
+
+            out.close();
+
+
+
+
+        } catch (IOException e) { // *I step back from the mic to WHY
             e.printStackTrace();
         }
 
 
+    }
+
+    private static void printDayEvents(ArrayList<String> dailyEvents, PrintWriter out, String dayName) {
+        if (!dailyEvents.isEmpty()) {
+            out.print("---" + dayName +"---\n");
+            for (String event : dailyEvents) {
+                out.print(event + "\n\n");
+            }
+            out.print("\n");
+        }
+    }
+
+    private static ArrayList<String> getWeekDayEvents(ArrayList<Event> events, int weekDayID) {
+        ArrayList<String> dayEvents = new ArrayList<String>();
+        for (Event e : events) {
+            if (e.getStarttime().get(Calendar.DAY_OF_WEEK) == weekDayID) {
+                dayEvents.add(e.toString());
+            }
+        }
+        return dayEvents;
     }
 }
