@@ -124,7 +124,7 @@ public class FileOperationsTest {
         oneWeek.add(createDummyEventWithTime(2011, 3, 12, 13));
         oneWeek.add(createDummyEventWithTime(2011, 3, 13, 14));
         oneWeek.add(createDummyEventWithTime(2011, 5, 12, 13));
-        oneWeek.add(createDummyEventWithTime(2011, 6, 9, 8));
+        oneWeek.add(createDummyEventWithTime(2011, 6, 9, 10));
         
         FileOperations.writeWeek(oneWeek, "testWeek.txt");
         
@@ -140,7 +140,9 @@ public class FileOperationsTest {
         start.set(Calendar.MILLISECOND, 0);
         end.set(year, 0, day, endhour, 0, 0);
         end.set(Calendar.MILLISECOND, 0);
-        return new Event(start, end, "Gurula", "DummyCourse");
+        Event dummy = new Event(start, end, "Gurula", "DummyCourse");
+        dummy.setType(courseEvent.LECTURE);
+        return dummy;
     }
 
 }

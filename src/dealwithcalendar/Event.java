@@ -143,7 +143,24 @@ public class Event implements Comparable<Event>, Serializable{
     public String toString(){
         String startString = starttime.get(Calendar.HOUR_OF_DAY) + ":" + starttime.get(Calendar.MINUTE);
         String endString = endtime.get(Calendar.HOUR_OF_DAY) + ":" + endtime.get(Calendar.MINUTE);
-        return name + "\nPaikka: " + location + "\nAlku: " + startString + "\nLoppu: " + endString + "\nMerkinnät: " + ownMarkings;
+        String typeString = "";
+
+        return name + " " + getEventType() + "\nPaikka: " + location + "\nAlku: " + startString + "\nLoppu: " + endString + "\nMerkinnät: " + ownMarkings;
+    }
+
+    private String getEventType(){
+        switch (type){
+            case(courseEvent.LECTURE):
+                return "Luento";
+            case(courseEvent.GUIDGROUP):
+                return "Ohjausryhmä";
+            case(courseEvent.STUDYGROUP):
+                return "Opintopiiri";
+            case(courseEvent.TEST):
+                return "Tentti";
+            default:
+                return "";
+        }
     }
 
 
