@@ -155,7 +155,8 @@ public class Course implements Comparable<Course>, Serializable {
      * @param _location The location of the event.
      */
     public void addCourseEvent(int _type, Calendar _time, int _weekday, int _duration, String _location){
-        if(_type != courseEvent.LECTURE && _type != courseEvent.STUDYGROUP)
+        if(_type != courseEvent.LECTURE && _type != courseEvent.STUDYGROUP && _type != courseEvent.GUIDGROUP &&
+           _type != courseEvent.OTHER)
             return;
         if(_weekday < 1 || _weekday > 7)
             return;
@@ -203,7 +204,8 @@ public class Course implements Comparable<Course>, Serializable {
                 generatedTest.setType(current.getType());
                 generatedEvents.add(generatedTest);
             }
-            else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP || current.getType() == courseEvent.OTHER){
+            else if (current.getType() == courseEvent.LECTURE || current.getType() == courseEvent.STUDYGROUP 
+                    || current.getType() == courseEvent.OTHER || current.getType() == courseEvent.GUIDGROUP) {
                 // System.out.println("FOUND LECTURE/STUDYGROUP!");
                 Calendar weeklyDates = (Calendar)start.clone();
                 findFirstMatchingWeekday(weeklyDates, current);
