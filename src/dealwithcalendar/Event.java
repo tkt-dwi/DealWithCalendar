@@ -17,6 +17,7 @@ public class Event implements Comparable<Event>, Serializable{
     private Calendar starttime;
     private Calendar endtime;
     private int courseID = -1;
+    private int type = 4;
     private String location;
     private String name;
     private String ownMarkings = "";
@@ -53,6 +54,17 @@ public class Event implements Comparable<Event>, Serializable{
         this.endtime = _endtime;
         this.location = _location;
         this.name = _name;
+    }
+
+    public void setType(int t) {
+        if (t < 0 || t > 4)
+            this.type = 4;
+
+        else this.type = t;
+    }
+
+    public int getType() {
+        return this.type;
     }
 
     public void setOwnMarkings(String om) {
