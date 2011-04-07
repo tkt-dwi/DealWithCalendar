@@ -80,10 +80,7 @@ public class GUI extends JFrame
      private JMenuItem eventView = new JMenuItem("Lisää tapahtuma");
      private JMenuItem saveWeek = new JMenuItem("Tallenna viikko");
      private JMenuItem quit = new JMenuItem("Poistu");
-        // courses is submenu in main menu
-     private JMenu courses = new JMenu("Kurssit");
-     private JMenuItem CoursesView = new JMenuItem("Selaa kursseja");
-     private JMenuItem addCourseView = new JMenuItem("Lisää kurssi");
+     private JMenuItem CoursesView = new JMenuItem("Kurssit");
 
      
      // weekNumber indicator
@@ -145,11 +142,14 @@ public class GUI extends JFrame
      private JTextArea eventOwnMarkings = new JTextArea("", 7, 30);
      private JPanel eventInfo = new JPanel(new BorderLayout());
 
-     // event buttons in week view's mainRight
+     // buttons in week view's mainRight
      private JButton addEvent = new JButton("Lisää / muuta tapahtuman tiedot");
      private JButton removeEvent = new JButton("Poista tapahtuma");
      private JButton alterEvent = new JButton("Muokkaa tapahtumaa");
-     private JPanel eventButtons = new JPanel(new GridLayout(3,1));
+     private JButton toCoursesView = new JButton("Kurssi näkymä");
+     private JButton addNewCourse = new JButton("Lisää kurssi");
+     private JButton saveThisWeek = new JButton("Tallenna viikko");
+     private JPanel eventButtons = new JPanel(new GridLayout(6,1));
 
      // whole calendar to store calendarScrollPane and weekScroll
      private JPanel calendarWhole;
@@ -167,6 +167,8 @@ public class GUI extends JFrame
      private JPanel wholeGUI = new JPanel(new BorderLayout());
 
      // courses view
+     private JButton addNewCourse2 = new JButton("Lisää kurssi");
+     private JButton toWeekView = new JButton("Viikko näkymä");
      private JComboBox pickDay = new JComboBox(dayNames);
      private JComboBox pickHour = new JComboBox(hrs);
      private JComboBox pickCourseEvent = new JComboBox(crsEvents);
@@ -313,9 +315,29 @@ public class GUI extends JFrame
         alterEvent.setForeground(new Color(0,0,0));
         alterEvent.addActionListener(this);
 
+        toCoursesView.setFont(new Font("sansserif", Font.BOLD, 15));
+        toCoursesView.setBackground(THEME_COLOR_VDARKBLUE);
+        toCoursesView.setForeground(new Color(0,0,0));
+        toCoursesView.addActionListener(this);
+
+        addNewCourse.setFont(new Font("sansserif", Font.BOLD, 15));
+        addNewCourse.setBackground(THEME_COLOR_VDARKBLUE);
+        addNewCourse.setForeground(new Color(0,0,0));
+        addNewCourse.addActionListener(this);
+
+        saveThisWeek.setFont(new Font("sansserif", Font.BOLD, 15));
+        saveThisWeek.setBackground(THEME_COLOR_VDARKBLUE);
+        saveThisWeek.setForeground(new Color(0,0,0));
+        saveThisWeek.addActionListener(this);
+
+
         eventButtons.add(saveEventMarkings);
         eventButtons.add(alterEvent);
         eventButtons.add(removeEvent);
+        eventButtons.add(saveThisWeek);
+        eventButtons.add(toCoursesView);
+        eventButtons.add(addNewCourse);
+        
 
         eventInfo.add("North", eventProperties);
         eventInfo.add(eventOwnMarkings);
@@ -336,6 +358,16 @@ public class GUI extends JFrame
         pickCourse.setBackground(THEME_COLOR_VDARKBLUE);
         pickCourse.setForeground(new Color(0,0,0));
         pickCourse.addActionListener(this);
+
+        toWeekView.setFont(new Font("sansserif", Font.BOLD, 15));
+        toWeekView.setBackground(THEME_COLOR_LIGHTBLUE);
+        toWeekView.setForeground(new Color(0,0,0));
+        toWeekView.addActionListener(this);
+
+        addNewCourse2.setFont(new Font("sansserif", Font.BOLD, 15));
+        addNewCourse2.setBackground(THEME_COLOR_VDARKBLUE);
+        addNewCourse2.setForeground(new Color(0,0,0));
+        addNewCourse2.addActionListener(this);
 
         // generate general course info into courseinfo JPanel here
         
@@ -523,22 +555,10 @@ public class GUI extends JFrame
         Menu.setMnemonic(KeyEvent.VK_V);
         Menu.setForeground(THEME_COLOR_VDARKBLUE);
 
-        courses.setBackground(THEME_COLOR_VDARKBLUE);
-        courses.setForeground(THEME_COLOR_VDARKBLUE);
-        courses.setMnemonic(KeyEvent.VK_K);
-        Menu.add(courses);
-
-            // courses submenu
-
-            CoursesView.setBackground(THEME_COLOR_VDARKBLUE);
-            CoursesView.setForeground(Color.DARK_GRAY);
-            CoursesView.addActionListener(this);
-            courses.add(CoursesView);
-
-            addCourseView.setBackground(THEME_COLOR_VDARKBLUE);
-            addCourseView.setForeground(Color.DARK_GRAY);
-            addCourseView.addActionListener(this);
-            courses.add(addCourseView);
+        CoursesView.setBackground(THEME_COLOR_VDARKBLUE);
+        CoursesView.setForeground(Color.DARK_GRAY);
+        CoursesView.addActionListener(this);
+        Menu.add(CoursesView);
 
         weekView.setBackground(THEME_COLOR_VDARKBLUE);
         weekView.setForeground(Color.DARK_GRAY);
@@ -623,7 +643,6 @@ public class GUI extends JFrame
         if (source == monthView) openSaveFileDialog();
         if (source == eventView) openEventWindow(0, 0);
         if (source == CoursesView) createCoursesView();
-        if (source == addCourseView) createAddCourseWindow();
         if (source == saveWeek) openSaveFileDialog();
 
         // week view
@@ -632,6 +651,10 @@ public class GUI extends JFrame
         if (source == saveEventMarkings) saveOwnMarkings();
         if (source == alterEvent) alterEvent();
         if (source == removeEvent) removeEvent();
+        if (source == toCoursesView) createCoursesView();
+        if (source == addNewCourse) createAddCourseWindow();
+        if (source == addNewCourse2) createAddCourseWindow();
+        if (source == saveThisWeek) openSaveFileDialog();
                 
         for (byte i = 0; i < HOURS ; i++) {
             for (byte j = 0; j < WEEKDAYS; j++) {
@@ -646,6 +669,7 @@ public class GUI extends JFrame
         // course view
         if (source == addSelectedEvents) addCourseEvents();
         if (source == pickCourse) updateCourseInformation();
+        if (source == toWeekView) createWeekView(curYear, curWeek);
 
         // eventWindow
         if (source==addEvent) addEventToCalendar();
@@ -746,6 +770,8 @@ public class GUI extends JFrame
         mainRight.removeAll();
         mainLeft.removeAll();
         mainLeft.add(courseViewMain);
+        mainRight.add(addNewCourse2);
+        mainRight.add("South",toWeekView);
 
         mainRight.validate();
         mainLeft.validate();
@@ -1005,6 +1031,8 @@ public class GUI extends JFrame
             m.writeData();
         }
         catch (IOException e) {}
+
+        createCoursesView();
     }
 
     
