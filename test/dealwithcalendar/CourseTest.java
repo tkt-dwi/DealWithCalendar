@@ -93,12 +93,12 @@ public class CourseTest {
         ArrayList<Event> tuesdayEvents = new ArrayList<Event>();
         ArrayList<Event> exams = new ArrayList<Event>();
         for (int i = 0; i < events.size(); i++){
-            String eventName = events.get(i).getName();
-            if(eventName.equals("Ohpe lecture"))
+            int eventType = events.get(i).getType();
+            if(eventType == courseEvent.LECTURE)
                 tuesdayEvents.add(events.get(i));
-            else if (eventName.equals("Ohpe studygroup"))
+            else if (eventType == courseEvent.STUDYGROUP)
                 mondayEvents.add(events.get(i));
-            else if (eventName.equals("Ohpe exam"))
+            else if (eventType == courseEvent.TEST)
                 exams.add(events.get(i));
         }
 

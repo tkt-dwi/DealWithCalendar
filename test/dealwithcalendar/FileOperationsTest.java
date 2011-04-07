@@ -2,6 +2,7 @@ package dealwithcalendar;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import org.junit.After;
@@ -114,6 +115,34 @@ public class FileOperationsTest {
 
         File file = new File( "testCalendar.test" );
         file.delete();
+    }
+
+    @Test
+    public void writeWeekTest(){
+        ArrayList <Event> oneWeek = new ArrayList<Event>();
+        
+        oneWeek.add(createDummyEventWithTime(2011, 3, 12, 13));
+        oneWeek.add(createDummyEventWithTime(2011, 3, 13, 14));
+        oneWeek.add(createDummyEventWithTime(2011, 5, 12, 13));
+        oneWeek.add(createDummyEventWithTime(2011, 6, 9, 10));
+        
+        FileOperations.writeWeek(oneWeek, "testWeek.txt");
+        
+        File writtenFile = new File("testWeek.txt");
+        
+        assertTrue(writtenFile.exists());
+    }
+
+    private Event createDummyEventWithTime(int year, int day, int starthour, int endhour){
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(year, 0, day, starthour, 0, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        end.set(year, 0, day, endhour, 0, 0);
+        end.set(Calendar.MILLISECOND, 0);
+        Event dummy = new Event(start, end, "Gurula", "DummyCourse");
+        dummy.setType(courseEvent.LECTURE);
+        return dummy;
     }
 
 }
