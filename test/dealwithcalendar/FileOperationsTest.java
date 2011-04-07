@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dealwithcalendar;
 
 import java.io.File;
@@ -17,8 +12,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author jjnyman
+ * Test of FileOperations methods.
+ * 
  */
 public class FileOperationsTest {
 
@@ -60,7 +55,9 @@ public class FileOperationsTest {
 
 
     /**
-     * Test of all FileOperations methods.
+     * Creates some dummy Events and Courses. Writes them to a file and then
+     * reads them. After that compares some info of the read information to the
+     * original versions. Returns success if assertEquals match.
      */
     @Test
     public void testWriteNReadCalendar() throws IOException {
@@ -87,18 +84,13 @@ public class FileOperationsTest {
         courses.put(2, c2);
         courses.put(3, c3);
 
-        FileOperations.startWrite(testCalendar, courses, "testCalendar.test");
+        FileOperations.writeCalendar(testCalendar, "testcalendar.test");
+        FileOperations.writeCourseEvents(courses, "testevents.test");
         FileOperations.closeOutputFile();
 
-        //writes the testcalendar to file
-//        FileOperations.writeCalendar(testCalendar);
-//        FileOperations.closeFile(FileOperations.output);
-
-        //reads the just created testfile and compares few elements
-
-        FileOperations.startRead("testCalendar.test");
-        dwiCalendar readDWI = FileOperations.readDWICalendar();
-        HashMap<Integer, Course> readCourses = FileOperations.readCourses();
+        
+        dwiCalendar readDWI = FileOperations.readDWICalendar("testcalendar.test");
+        HashMap<Integer, Course> readCourses = FileOperations.readCourses("testevents.test");
 
         FileOperations.closeInputFile();
 
