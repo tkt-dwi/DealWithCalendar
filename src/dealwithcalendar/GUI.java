@@ -43,11 +43,17 @@ public class GUI extends JFrame
      private static final int WEEKDAYS = 7;
      private static final int HOURS = 24;
      private static final int MONTHS = 12;
-     private static final Color THEME_VDARKBLUE = new Color(100,125,150);
-     private static final Color THEME_DARKBLUE = new Color(100,125,150, 200);
-     private static final Color THEME_BLUE = new Color(100,125,150, 100);
-     private static final Color THEME_LIGHTBLUE = new Color(100,125,150, 50);
-     private static final Color THEME_VLIGHTBLUE = new Color(100,125,150, 0);
+     private static final Color THEME_COLOR_VDARKBLUE = new Color(100,125,150);
+     private static final Color THEME_COLOR_DARKBLUE = new Color(100,125,150, 200);
+     private static final Color THEME_COLOR_BLUE = new Color(100,125,150, 100);
+     private static final Color THEME_COLOR_LIGHTBLUE = new Color(100,125,150, 50);
+     private static final Color THEME_COLOR_VLIGHTBLUE = new Color(100,125,150, 0);
+     private static final Color THEME_COLOR_OTHER = new Color(150,125,100, 150);
+     private static final Color THEME_COLOR_COTHER = new Color(200,125, 50, 150);
+     private static final Color THEME_COLOR_CTEST = new Color(200,125,150, 200);
+     private static final Color THEME_COLOR_CSTUDYG = new Color(100,150,150, 100);
+     private static final Color THEME_COLOR_CLECTURE = new Color(50,125,125, 150);
+     private static final Color THEME_COLOR_CGUIDG = new Color(25,175,100, 100);
      private static final Font THEME_FONT_SMALL = new Font("sansserif", Font.BOLD, 12);
 
      // calendar view's hour buttons for each day
@@ -56,7 +62,6 @@ public class GUI extends JFrame
       *  ie. calendarButton[i][j] refers to weekEvents.get(calendarEvents[i][j])
       * if calendarButton[i][j] doesn't represent any event then calendarEvents[i][j] = -1. */
      private int[][] calendarEvents;
-     
 
      // general button for constructing calendarButtons
      private JButton b;
@@ -134,7 +139,7 @@ public class GUI extends JFrame
 
      // week view
 
-       // text area and panel for showing event info details in week view's mainRight
+     // text area and panel for showing event info details in week view's mainRight
      private JButton saveEventMarkings = new JButton("Tallenna merkinnät");
      private JTextArea eventProperties = new JTextArea(eventEmpty, 5, 30);
      private JTextArea eventOwnMarkings = new JTextArea("", 7, 30);
@@ -227,14 +232,14 @@ public class GUI extends JFrame
 
         // construct weekNumber marker and calendarButtons for standard week view
         weekNumber.setFont(new Font("sansserif", Font.BOLD, 25));
-        weekNumber.setBackground(THEME_DARKBLUE);
+        weekNumber.setBackground(THEME_COLOR_DARKBLUE);
         weekNumber.setHorizontalAlignment(0);
         weekNumber.setEditable(false);
         bPrev.setFont(new Font("sansserif", Font.BOLD, 25));
-        bPrev.setBackground(THEME_DARKBLUE);
+        bPrev.setBackground(THEME_COLOR_DARKBLUE);
         bPrev.addActionListener(this);
         bNext.setFont(new Font("sansserif", Font.BOLD, 25));
-        bNext.setBackground(THEME_DARKBLUE);
+        bNext.setBackground(THEME_COLOR_DARKBLUE);
         bNext.addActionListener(this);
         
         calendarWhole = new JPanel(new GridLayout(HOURS,WEEKDAYS));
@@ -253,7 +258,7 @@ public class GUI extends JFrame
         for (int i = 0; i < HOURS; i++) {
             for (int j = 0; j < WEEKDAYS; j++) {
                b = new JButton("   ");
-               b.setBackground(THEME_VLIGHTBLUE);
+               b.setBackground(THEME_COLOR_VLIGHTBLUE);
                b.setFont(new Font("sansserif", Font.PLAIN, 10));
                b.setMargin(margins);
                b.setPreferredSize(new Dimension(80,15));
@@ -274,24 +279,24 @@ public class GUI extends JFrame
 
         // construct container for event info's
         eventProperties.setFont(THEME_FONT_SMALL);
-        eventProperties.setBackground(THEME_BLUE);
+        eventProperties.setBackground(THEME_COLOR_BLUE);
         eventProperties.setForeground(new Color(0,0,0));
         eventProperties.setEditable(false);
         eventProperties.setLineWrap(true);
         eventProperties.setWrapStyleWord(true);
 
         saveEventMarkings.setFont(new Font("sansserif", Font.BOLD, 15));
-        saveEventMarkings.setBackground(THEME_VDARKBLUE);
+        saveEventMarkings.setBackground(THEME_COLOR_VDARKBLUE);
         saveEventMarkings.setForeground(new Color(0,0,0));
         saveEventMarkings.addActionListener(this);
 
         removeEvent.setFont(new Font("sansserif", Font.BOLD, 15));
-        removeEvent.setBackground(THEME_VDARKBLUE);
+        removeEvent.setBackground(THEME_COLOR_VDARKBLUE);
         removeEvent.setForeground(new Color(0,0,0));
         removeEvent.addActionListener(this);
 
         alterEvent.setFont(new Font("sansserif", Font.BOLD, 15));
-        alterEvent.setBackground(THEME_VDARKBLUE);
+        alterEvent.setBackground(THEME_COLOR_VDARKBLUE);
         alterEvent.setForeground(new Color(0,0,0));
         alterEvent.addActionListener(this);
 
@@ -315,7 +320,7 @@ public class GUI extends JFrame
         // FIXME: get all courses in here map them to some array
         pickCourse = new JComboBox(dc);
         pickCourse.setFont(THEME_FONT_SMALL);
-        pickCourse.setBackground(THEME_VDARKBLUE);
+        pickCourse.setBackground(THEME_COLOR_VDARKBLUE);
         pickCourse.setForeground(new Color(0,0,0));
         pickCourse.addActionListener(this);
 
@@ -325,14 +330,14 @@ public class GUI extends JFrame
         selectedCourseInfo.setEditable(false);
         selectedCourseInfo.setPreferredSize(new Dimension(200, 60));
         selectedCourseInfo.setFont(THEME_FONT_SMALL);
-        selectedCourseInfo.setBackground(THEME_VDARKBLUE);
+        selectedCourseInfo.setBackground(THEME_COLOR_VDARKBLUE);
         selectedCourseInfo.setForeground(new Color(0,0,0));
         
         courseNickname.setText("");
         courseNickname.setEditable(true);
         courseNickname.setPreferredSize(new Dimension(200, 20));
         cn.setFont(THEME_FONT_SMALL);
-        cn.setBackground(THEME_VLIGHTBLUE);
+        cn.setBackground(THEME_COLOR_VLIGHTBLUE);
         cn.setEditable(false);
         courseNick.add(cn);
         courseNick.add(courseNickname);
@@ -344,13 +349,13 @@ public class GUI extends JFrame
         for (int i=0; i < 6; i++) {
             courseEvent = new JPanel(new FlowLayout());
             courseEvent.setFont(THEME_FONT_SMALL);
-            courseEvent.setBackground(THEME_BLUE);
+            courseEvent.setBackground(THEME_COLOR_BLUE);
             courseEvent.setForeground(new Color(0,0,0));
 
             pickCourseEvent = new JComboBox(crsEvents);
             pickCourseEvent.setPreferredSize(new Dimension(120,20));
             pickCourseEvent.setFont(THEME_FONT_SMALL);
-            pickCourseEvent.setBackground(THEME_VDARKBLUE);
+            pickCourseEvent.setBackground(THEME_COLOR_VDARKBLUE);
             pickCourseEvent.setForeground(new Color(0,0,0));
             courseEventType[i] = pickCourseEvent;
             courseEvent.add(pickCourseEvent);
@@ -358,7 +363,7 @@ public class GUI extends JFrame
             pickDay = new JComboBox(dayNames);
             pickDay.setPreferredSize(new Dimension(110,20));
             pickDay.setFont(THEME_FONT_SMALL);
-            pickDay.setBackground(THEME_VDARKBLUE);
+            pickDay.setBackground(THEME_COLOR_VDARKBLUE);
             pickDay.setForeground(new Color(0,0,0));
             pickDay.setSelectedIndex(1);
             courseEventDays[i] = pickDay;
@@ -367,7 +372,7 @@ public class GUI extends JFrame
             pickHour = new JComboBox(hrs);
             pickHour.setPreferredSize(new Dimension(70,20));
             pickHour.setFont(THEME_FONT_SMALL);
-            pickHour.setBackground(THEME_VDARKBLUE);
+            pickHour.setBackground(THEME_COLOR_VDARKBLUE);
             pickHour.setForeground(new Color(0,0,0));
             pickHour.setSelectedIndex(12);
             courseEventSTime[i] = pickHour;
@@ -376,7 +381,7 @@ public class GUI extends JFrame
             pickHour = new JComboBox(hrs);
             pickHour.setPreferredSize(new Dimension(70,20));
             pickHour.setFont(THEME_FONT_SMALL);
-            pickHour.setBackground(THEME_VDARKBLUE);
+            pickHour.setBackground(THEME_COLOR_VDARKBLUE);
             pickHour.setForeground(new Color(0,0,0));
             pickHour.setSelectedIndex(12);
             courseEventETime[i] = pickHour;
@@ -405,19 +410,19 @@ public class GUI extends JFrame
         for (int i=0; i < 2; i++) {
             courseEvent = new JPanel(new FlowLayout());
             courseEvent.setFont(THEME_FONT_SMALL);
-            courseEvent.setBackground(THEME_BLUE);
+            courseEvent.setBackground(THEME_COLOR_BLUE);
             courseEvent.setForeground(new Color(0,0,0));
 
             insertPlace = new JTextField("Tentti");
             insertPlace.setFont(THEME_FONT_SMALL);
-            insertPlace.setBackground(THEME_VLIGHTBLUE);
+            insertPlace.setBackground(THEME_COLOR_VLIGHTBLUE);
             insertPlace.setEditable(false);
             courseEvent.add(insertPlace);
 
             pickTestDay = new JComboBox(monthdays);
             pickTestDay.setPreferredSize(new Dimension(50,20));
             pickTestDay.setFont(THEME_FONT_SMALL);
-            pickTestDay.setBackground(THEME_VDARKBLUE);
+            pickTestDay.setBackground(THEME_COLOR_VDARKBLUE);
             pickTestDay.setForeground(new Color(0,0,0));
             courseEventTestDays[i] = pickTestDay;
             courseEvent.add(pickTestDay);
@@ -425,7 +430,7 @@ public class GUI extends JFrame
             pickTestMonth = new JComboBox(months);
             pickTestMonth.setPreferredSize(new Dimension(50,20));
             pickTestMonth.setFont(THEME_FONT_SMALL);
-            pickTestMonth.setBackground(THEME_VDARKBLUE);
+            pickTestMonth.setBackground(THEME_COLOR_VDARKBLUE);
             pickTestMonth.setForeground(new Color(0,0,0));
             courseEventTestMonths[i] = pickTestMonth;
             courseEvent.add(pickTestMonth);
@@ -433,7 +438,7 @@ public class GUI extends JFrame
             pickTestYear = new JComboBox(years);
             pickTestYear.setPreferredSize(new Dimension(70,20));
             pickTestYear.setFont(THEME_FONT_SMALL);
-            pickTestYear.setBackground(THEME_VDARKBLUE);
+            pickTestYear.setBackground(THEME_COLOR_VDARKBLUE);
             pickTestYear.setForeground(new Color(0,0,0));
             courseEventTestYears[i] = pickTestYear;
             courseEvent.add(pickTestYear);
@@ -441,7 +446,7 @@ public class GUI extends JFrame
             pickHour = new JComboBox(hrs);
             pickHour.setPreferredSize(new Dimension(70,20));
             pickHour.setFont(THEME_FONT_SMALL);
-            pickHour.setBackground(THEME_VDARKBLUE);
+            pickHour.setBackground(THEME_COLOR_VDARKBLUE);
             pickHour.setForeground(new Color(0,0,0));
             pickHour.setSelectedIndex(12);
             courseEventSTime[i+6] = pickHour;
@@ -450,7 +455,7 @@ public class GUI extends JFrame
             pickHour = new JComboBox(hrs);
             pickHour.setPreferredSize(new Dimension(70,20));
             pickHour.setFont(THEME_FONT_SMALL);
-            pickHour.setBackground(THEME_VDARKBLUE);
+            pickHour.setBackground(THEME_COLOR_VDARKBLUE);
             pickHour.setForeground(new Color(0,0,0));
             pickHour.setSelectedIndex(12);
             courseEventETime[i+6] = pickHour;
@@ -478,7 +483,7 @@ public class GUI extends JFrame
         }
       
         addSelectedEvents.setFont(new Font("sansserif", Font.PLAIN, 20));
-        addSelectedEvents.setBackground(THEME_VDARKBLUE);
+        addSelectedEvents.setBackground(THEME_COLOR_VDARKBLUE);
         addSelectedEvents.setOpaque(true);
         addSelectedEvents.setForeground(new Color(0,0,0));
         addSelectedEvents.addActionListener(this);
@@ -490,67 +495,67 @@ public class GUI extends JFrame
         courseViewMain.add(courseViewLower);
         courseViewMain.add("North", courseViewUpper);
         //courseViewMain.setPreferredSize(new Dimension(650, 400));
-        courseViewMain.setBackground(THEME_VLIGHTBLUE);
+        courseViewMain.setBackground(THEME_COLOR_VLIGHTBLUE);
         courseViewMain.setFont(new Font("sansserif", Font.PLAIN, 13));
 
        
         // GENERATE JMENUBAR AND IT'S MENUS        
         
-        menuBar.setBackground(THEME_BLUE);
+        menuBar.setBackground(THEME_COLOR_BLUE);
         menuBar.add(Menu);
         
         // game option menu
 
         Menu.setFont(new Font("sansserif", Font.BOLD, 13));
         Menu.setMnemonic(KeyEvent.VK_V);
-        Menu.setForeground(THEME_VDARKBLUE);
+        Menu.setForeground(THEME_COLOR_VDARKBLUE);
 
-        courses.setBackground(THEME_VDARKBLUE);
-        courses.setForeground(THEME_VDARKBLUE);
+        courses.setBackground(THEME_COLOR_VDARKBLUE);
+        courses.setForeground(THEME_COLOR_VDARKBLUE);
         courses.setMnemonic(KeyEvent.VK_K);
         Menu.add(courses);
 
             // courses submenu
 
-            CoursesView.setBackground(THEME_VDARKBLUE);
+            CoursesView.setBackground(THEME_COLOR_VDARKBLUE);
             CoursesView.setForeground(Color.DARK_GRAY);
             CoursesView.addActionListener(this);
             courses.add(CoursesView);
 
-            addCourseView.setBackground(THEME_VDARKBLUE);
+            addCourseView.setBackground(THEME_COLOR_VDARKBLUE);
             addCourseView.setForeground(Color.DARK_GRAY);
             addCourseView.addActionListener(this);
             courses.add(addCourseView);
 
-        weekView.setBackground(THEME_VDARKBLUE);
+        weekView.setBackground(THEME_COLOR_VDARKBLUE);
         weekView.setForeground(Color.DARK_GRAY);
         weekView.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         weekView.addActionListener(this);
         Menu.add(weekView);
 
-        monthView.setBackground(THEME_VDARKBLUE);
+        monthView.setBackground(THEME_COLOR_VDARKBLUE);
         monthView.setForeground(Color.DARK_GRAY);
         monthView.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_K, ActionEvent.CTRL_MASK));
         monthView.addActionListener(this);
         Menu.add(monthView);
 
-        eventView.setBackground(THEME_VDARKBLUE);
+        eventView.setBackground(THEME_COLOR_VDARKBLUE);
         eventView.setForeground(Color.DARK_GRAY);
         eventView.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         eventView.addActionListener(this);
         Menu.add(eventView);
 
-        saveWeek.setBackground(THEME_VDARKBLUE);
+        saveWeek.setBackground(THEME_COLOR_VDARKBLUE);
         saveWeek.setForeground(Color.DARK_GRAY);
         saveWeek.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         saveWeek.addActionListener(this);
         Menu.add(saveWeek);
 
-        quit.setBackground(THEME_VDARKBLUE);
+        quit.setBackground(THEME_COLOR_VDARKBLUE);
         quit.setForeground(Color.DARK_GRAY);
         quit.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_P, ActionEvent.CTRL_MASK));
@@ -675,7 +680,7 @@ public class GUI extends JFrame
         for (int i = 0; i < HOURS; i++) {
             for (int j = 0; j < WEEKDAYS; j++) {
                calendarButtons[i][j].setText("    ");
-               calendarButtons[i][j].setBackground(THEME_VLIGHTBLUE);
+               calendarButtons[i][j].setBackground(THEME_COLOR_VLIGHTBLUE);
                calendarEvents[i][j] = -1;
             }
         }
@@ -833,7 +838,6 @@ public class GUI extends JFrame
                 int et = courseEventETime[i].getSelectedIndex();
                 if (st < et) { // add only those with starttime < endtime
                     int type = courseEventType[i].getSelectedIndex();
-                    if (type == 2) type = 1;
                     if (type == 3) type = 4;
                     int d = ((JComboBox)courseEventDays[i]).getSelectedIndex() +1;
                     String loc = courseEventLoc[i].getText();
@@ -856,7 +860,6 @@ public class GUI extends JFrame
                     int td = courseEventTestDays[i].getSelectedIndex() +1;
                     int tm = courseEventTestMonths[i].getSelectedIndex();
                     int ty = Calendar.getInstance().get(Calendar.YEAR) + courseEventTestYears[i].getSelectedIndex();
-                    int type = 3;
                     String loc = courseEventLoc[i+6].getText();
                     if (loc.equals("lisää paikka")) loc = "";
                     int dur = (et-st)*60;
@@ -888,11 +891,28 @@ public class GUI extends JFrame
     }
 
     public void addEventToCalendar() {
-        eventWindow.setVisible(false);
-
+        if (esTime.getSelectedIndex() >= eeTime.getSelectedIndex())
+            return;
         if (eName.getText().equals("nimi"))
             return;
         else addE.setName(eName.getText());
+
+        eventWindow.setVisible(false);
+
+        int y = Calendar.getInstance().get(Calendar.YEAR) + eYear.getSelectedIndex();
+        int mo = eMonth.getSelectedIndex();
+        int d = eDay.getSelectedIndex() +1;
+        int sh = esTime.getSelectedIndex();
+        int eh = eeTime.getSelectedIndex();
+        
+        Calendar st = Calendar.getInstance();
+        Calendar et = Calendar.getInstance();
+
+        st.set(y,mo,d,sh,0,0);
+        et.set(y,mo,d,eh,0,0);
+
+        addE.setStarttime(st);
+        addE.setEndtime(et);
         
         if (ePlace.getText().equals("paikka"))
             addE.setLocation("");
@@ -927,23 +947,27 @@ public class GUI extends JFrame
      */
     public void setButtonBg(int x, int y, Event e) {
         if (e.getCourseID() < 0) {
-            calendarButtons[x][y].setBackground(new Color(100,125,150,100));
+            calendarButtons[x][y].setBackground(THEME_COLOR_OTHER);
             return;
         }
         if (e.getType() == 0) {
-            calendarButtons[x][y].setBackground(new Color(100,125,150,100));
+            calendarButtons[x][y].setBackground(THEME_COLOR_CLECTURE);
             return;
         }
         if (e.getType() == 1) {
-            calendarButtons[x][y].setBackground(new Color(100,125,150,100));
+            calendarButtons[x][y].setBackground(THEME_COLOR_CSTUDYG);
+            return;
+        }
+        if (e.getType() == 2) {
+            calendarButtons[x][y].setBackground(THEME_COLOR_CGUIDG);
             return;
         }
         if (e.getType() == 3) {
-            calendarButtons[x][y].setBackground(new Color(100,125,150,100));
+            calendarButtons[x][y].setBackground(THEME_COLOR_CTEST);
             return;
         }
         if (e.getType() == 4) {
-            calendarButtons[x][y].setBackground(new Color(100,125,150,100));
+            calendarButtons[x][y].setBackground(THEME_COLOR_COTHER);
             return;
         }
 
@@ -1061,8 +1085,18 @@ public class GUI extends JFrame
      */
     public void updateEventInfo(Event e) {
         curEvent = e;
+        String type = "";
 
-        eventProperties.setText(e.getName() +"\n" +
+
+        if (e.getType() == 0) type = ", luento";
+        if (e.getType() == 1) type = ", laskuharjoitus";
+        if (e.getType() == 2) type = ", ohjausryhmä";
+        if (e.getType() == 3) type = ", tentti";
+        if (e.getType() == 4) type = ", muu";
+        if (e.getCourseID() < 0) type = "";
+
+
+        eventProperties.setText(e.getName() + type + "\n" +
                                 "Päivämäärä: " + parseDate(e.getStarttime()) + "\n" +
                                 "Kello: "+ e.getStarttime().get(Calendar.HOUR_OF_DAY) +" - "
                                          + e.getEndtime().get(Calendar.HOUR_OF_DAY) + "\n" +
@@ -1078,6 +1112,8 @@ public class GUI extends JFrame
      * while JFrame is open.
      */
     public void openEventWindow(int i, int j) {
+        repaint();
+
         Calendar st = Calendar.getInstance();
         Calendar et = Calendar.getInstance();
         int wd = j;
@@ -1154,7 +1190,7 @@ public class GUI extends JFrame
 
         Event = new JPanel(new FlowLayout());
         Event.setFont(THEME_FONT_SMALL);
-        Event.setBackground(THEME_BLUE);
+        Event.setBackground(THEME_COLOR_BLUE);
         Event.setForeground(new Color(0,0,0));
 
         eName.setPreferredSize(new Dimension(120,20));
@@ -1164,31 +1200,31 @@ public class GUI extends JFrame
 
         eDay.setPreferredSize(new Dimension(50,20));
         eDay.setFont(THEME_FONT_SMALL);
-        eDay.setBackground(THEME_VDARKBLUE);
+        eDay.setBackground(THEME_COLOR_VDARKBLUE);
         eDay.setForeground(new Color(0,0,0));
         Event.add(eDay);
 
         eMonth.setPreferredSize(new Dimension(50,20));
         eMonth.setFont(THEME_FONT_SMALL);
-        eMonth.setBackground(THEME_VDARKBLUE);
+        eMonth.setBackground(THEME_COLOR_VDARKBLUE);
         eMonth.setForeground(new Color(0,0,0));
         Event.add(eMonth);
 
         eYear.setPreferredSize(new Dimension(70,20));
         eYear.setFont(THEME_FONT_SMALL);
-        eYear.setBackground(THEME_VDARKBLUE);
+        eYear.setBackground(THEME_COLOR_VDARKBLUE);
         eYear.setForeground(new Color(0,0,0));
         Event.add(eYear);
 
         esTime.setPreferredSize(new Dimension(70,20));
         esTime.setFont(THEME_FONT_SMALL);
-        esTime.setBackground(THEME_VDARKBLUE);
+        esTime.setBackground(THEME_COLOR_VDARKBLUE);
         esTime.setForeground(new Color(0,0,0));
         Event.add(esTime);
 
         eeTime.setPreferredSize(new Dimension(70,20));
         eeTime.setFont(THEME_FONT_SMALL);
-        eeTime.setBackground(THEME_VDARKBLUE);
+        eeTime.setBackground(THEME_COLOR_VDARKBLUE);
         eeTime.setForeground(new Color(0,0,0));
         Event.add(eeTime);
 
@@ -1201,7 +1237,7 @@ public class GUI extends JFrame
 
         addEvent.setPreferredSize(new Dimension(120,20));
         addEvent.setFont(THEME_FONT_SMALL);
-        addEvent.setBackground(THEME_VDARKBLUE);
+        addEvent.setBackground(THEME_COLOR_VDARKBLUE);
 
         JPanel layout = new JPanel(new BorderLayout());
         JPanel ev = new JPanel(new BorderLayout());
