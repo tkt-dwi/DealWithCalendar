@@ -817,7 +817,6 @@ public class GUI extends JFrame
         }
 
         if (weekEvents != null) {
-            System.out.println(weekEvents.size());
 
             for (int i = 0; i < weekEvents.size(); i++) {
                 Event e = weekEvents.get(i);
@@ -1004,13 +1003,11 @@ public class GUI extends JFrame
                     Calendar c = Calendar.getInstance();
                     c.set(ty, tm, td, st, 0, 0);
                     m.addCourseExam(m.getACourse(courseid), c, loc, dur);
-                    System.out.println(td + "." + tm + "." + ty);
                 }
             }
         }
         m.createEventsToCalendar(courseid);
 
-        System.out.println(m.getCalendar().size());
         try {
                 m.writeData();
             }
@@ -1079,8 +1076,6 @@ public class GUI extends JFrame
         if (crsName.getText().equals("nimi")) return;
         if (crsName.getText().equals("")) return;
 
-        System.out.println(crs.size());
-
         String crsn = crsName.getText();
         int sy = Calendar.getInstance().get(Calendar.YEAR) + crsSYear.getSelectedIndex();
         int ey = Calendar.getInstance().get(Calendar.YEAR) + crsEYear.getSelectedIndex();
@@ -1104,8 +1099,6 @@ public class GUI extends JFrame
         ec.set(ey,em,ed, 23, 59, 59);
 
         int id = m.addCourse(sc, ec, crsn, 0);
-
-        System.out.println(crs.size());
 
         // update courses
         pickCourse.addItem(crsn);
