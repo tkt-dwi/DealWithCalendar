@@ -76,18 +76,27 @@ public class Course implements Comparable<Course>, Serializable {
      * @return Negative if this.id is smaller, positive if not, 0 if they're equal
      */
     public int compareTo(Course _c) {
-        if (this.start.before(_c.start))
-            return -1;
-        if (this.start.after(_c.start))
-            return 1;
-        if (this.end.before(_c.end))
-            return -1;
-        if (this.end.after(_c.end))
-            return 1;
-        if (!this.name.equals(_c.name))
-            return this.name.compareTo(_c.name);
+    	if(this.start != null && _c.start != null)
+    	{
+	        if (this.start.before(_c.start))
+	            return -1;
+	        if (this.start.after(_c.start))
+	            return 1;
+    	}
+    	if(this.end != null && _c.end != null)
+    	{
+	        if (this.end.before(_c.end))
+	            return -1;
+	        if (this.end.after(_c.end))
+	            return 1;
+    	}
+    	if(this.name != null && _c.name != null)
+    	{
+	        if (!this.name.equals(_c.name))
+	            return this.name.compareTo(_c.name);
+        }
 
-        else return 0;
+        return 0;
     }
 
     public int getCr() {
@@ -233,9 +242,10 @@ public class Course implements Comparable<Course>, Serializable {
     }
 
     private void findFirstMatchingWeekday(Calendar weeklyDates, courseEvent current) {
-        while (weeklyDates.get(Calendar.DAY_OF_WEEK) != current.getWeekday()) {
-            weeklyDates.add(Calendar.DATE, 1);
-        }
+    	if(weeklyDates != null && current != null)
+	        while (weeklyDates.get(Calendar.DAY_OF_WEEK) != current.getWeekday()) {
+	            weeklyDates.add(Calendar.DATE, 1);
+	        }
     }
 
     private Calendar getEndtime(int minutes, Calendar original){

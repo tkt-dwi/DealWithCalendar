@@ -144,7 +144,13 @@ public class Main {
     }
 
     public void addCourses(ArrayList<Course> courseArray){
+    	if(courseArray == null)
+    		return;
+    	
         Iterator<Course> courseIterator = courseArray.iterator();
+        if(courseIterator == null)
+        	return;
+        
         while(courseIterator.hasNext()){
             Course current = courseIterator.next();
             int ID = getNextFreeID();

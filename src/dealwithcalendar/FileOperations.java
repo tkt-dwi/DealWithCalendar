@@ -195,7 +195,8 @@ public class FileOperations {
         		System.err.println("writeWeek called with empty event list");
         	else if(events.get(0).getStarttime() == null)
         		System.err.println("writeWeek: events.get(0) has no start time");
-        	NPe.printStackTrace();
+        	else
+        		System.err.println(NPe);
         }
 
 

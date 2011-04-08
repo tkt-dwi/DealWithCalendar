@@ -48,7 +48,7 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
     public ArrayList<Event> getEvents(Calendar start, Calendar end) {
         Event startEvent = null;
         Event endEvent = null;
-        if (start.compareTo(end) > 0) {
+        if (start.compareTo(end) > 0 || start == null || end == null) {
             return null;
         }
         Iterator<Event> eventIterator = events.iterator();
@@ -134,6 +134,8 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
     }
 
     public ArrayList<Event> getEventsOfWeek(Calendar dayInWeek) {
+    	if(dayInWeek == null)
+    		return null;
         return getEventsOfWeek(dayInWeek.get(Calendar.YEAR), dayInWeek.get(Calendar.WEEK_OF_YEAR));
     }
 
@@ -165,6 +167,9 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
 
     public void removeEvents(int courseID){
         ArrayList<Event> eventsToBeRemoved = getEvents(courseID);
+        if(eventsToBeRemoved == null)
+        	return;
+        
         Iterator<Event> eventIterator = eventsToBeRemoved.iterator();
         while(eventIterator.hasNext()){
             Event current = eventIterator.next();
@@ -187,10 +192,18 @@ public class dwiCalendar implements Comparable<dwiCalendar>, Serializable {
      * @return Negative if this dwiCalendar is earlier, positive if later, 0 if they're the same year
      */
     public int compareTo(dwiCalendar _c) {
+    	if(_c == null)
+    		return 0;
         return this.year - _c.year;
     }
 
     private boolean dateCrash(Calendar start, Calendar end, Calendar toBeTested, boolean isStart){
+    	if(start == null || end == null)
+    	{
+    		System.err.println("dwiCalendar.dateCrash error, start = " + start + "; end = " + end + "; Returning true");
+    		return true;
+    	}
+    	
         if(isStart)
             return (start.compareTo(toBeTested) <= 0 && end.compareTo(toBeTested) > 0);
         else
