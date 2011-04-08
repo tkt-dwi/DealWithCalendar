@@ -75,12 +75,12 @@ public class GUI extends JFrame
 
      // calendar menu and it's items
      private JMenu Menu = new JMenu("Valikko");
-     private JMenuItem weekView = new JMenuItem("Viikkonäkymään");
+     private JMenuItem weekView = new JMenuItem("Viikkonäkymä");
      private JMenuItem monthView = new JMenuItem("Kuukausinäkymään");
      private JMenuItem eventView = new JMenuItem("Lisää tapahtuma");
      private JMenuItem saveWeek = new JMenuItem("Tallenna viikko");
      private JMenuItem quit = new JMenuItem("Poistu");
-     private JMenuItem CoursesView = new JMenuItem("Kurssit");
+     private JMenuItem CoursesView = new JMenuItem("Kurssinäkymä");
 
      
      // weekNumber indicator
@@ -148,7 +148,7 @@ public class GUI extends JFrame
      private JButton addEvent = new JButton("Lisää / muuta tapahtuman tiedot");
      private JButton removeEvent = new JButton("Poista tapahtuma");
      private JButton alterEvent = new JButton("Muokkaa tapahtumaa");
-     private JButton toCoursesView = new JButton("Kurssi näkymä");
+     private JButton toCoursesView = new JButton("Kurssinäkymä");
      private JButton addNewCourse = new JButton("Lisää kurssi");
      private JButton saveThisWeek = new JButton("Tallenna viikko");
      private JPanel eventButtons = new JPanel(new GridLayout(6,1));
@@ -170,7 +170,7 @@ public class GUI extends JFrame
 
      // courses view
      private JButton addNewCourse2 = new JButton("Lisää kurssi");
-     private JButton toWeekView = new JButton("Viikko näkymä");
+     private JButton toWeekView = new JButton("Viikkonäkymä");
      private JComboBox pickDay = new JComboBox(dayNames);
      private JComboBox pickHour = new JComboBox(hrs);
      private JComboBox pickCourseEvent = new JComboBox(crsEvents);
@@ -651,7 +651,7 @@ public class GUI extends JFrame
         monthView.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_K, ActionEvent.CTRL_MASK));
         monthView.addActionListener(this);
-        Menu.add(monthView);
+        //Menu.add(monthView);
 
         eventView.setBackground(THEME_COLOR_VDARKBLUE);
         eventView.setForeground(Color.DARK_GRAY);
