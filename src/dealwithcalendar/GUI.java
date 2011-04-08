@@ -125,9 +125,11 @@ public class GUI extends JFrame
      private String[] monthdays = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
                                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
                                    "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
-
      // list for JComboBox courseEventTestYears
      private String[] years = new String[2];
+
+     private String[] dShort = {"ma", "ti", "ke", "to", "pe", "la", "su"};
+     private JTextField ds = new JTextField();
 
 
    
@@ -257,7 +259,7 @@ public class GUI extends JFrame
         bNext.setBackground(THEME_COLOR_DARKBLUE);
         bNext.addActionListener(this);
         
-        calendarWhole = new JPanel(new GridLayout(HOURS,WEEKDAYS));
+        calendarWhole = new JPanel(new GridLayout(HOURS +1,WEEKDAYS +1));
         calendarButtons = new JButton[HOURS][WEEKDAYS];
         calendarEvents = new int[HOURS][WEEKDAYS];
         // make calendar view scrollable (not necessary?)
@@ -270,7 +272,84 @@ public class GUI extends JFrame
         upperLeftUI.add("North", weekScroll);
 
         // create standard week view, map JButtons and events into arrays
+        ds = new JTextField("Kello / pvä");
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+        
+        ds = new JTextField(dShort[0]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[1]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[2]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[3]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[4]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[5]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        ds = new JTextField(dShort[6]);
+        ds.setBackground(THEME_COLOR_LIGHTBLUE);
+        ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+        ds.setEditable(false);
+        ds.setMargin(margins);
+        ds.setPreferredSize(new Dimension(80,15));
+        calendarWhole.add(ds);
+
+        
+
+
         for (int i = 0; i < HOURS; i++) {
+            ds = new JTextField(hrs[i]);
+            ds.setBackground(THEME_COLOR_BLUE);
+            ds.setFont(new Font("sansserif", Font.PLAIN, 10));
+            ds.setHorizontalAlignment(JTextField.CENTER);
+            ds.setEditable(false);
+            ds.setMargin(margins);
+            ds.setPreferredSize(new Dimension(80,15));
+            calendarWhole.add(ds);
+
+
             for (int j = 0; j < WEEKDAYS; j++) {
                b = new JButton("   ");
                b.setBackground(THEME_COLOR_VLIGHTBLUE);
@@ -869,8 +948,13 @@ public class GUI extends JFrame
     public void removeEvent() {
         m.removeEvent(curEvent);
         curEvent = null;
-
         createWeekView(curYear, curWeek);
+        updateEventInfo(null);
+        
+        try {
+                m.writeData();
+            }
+        catch (IOException e) {}
     }
 
     public void addCourseEvents() {
@@ -1032,7 +1116,6 @@ public class GUI extends JFrame
         }
         catch (IOException e) {}
 
-        createCoursesView();
     }
 
     
@@ -1184,6 +1267,17 @@ public class GUI extends JFrame
         curEvent = e;
         String type = "";
 
+        if (e == null) {
+            eventProperties.setText("\n" +
+                                "Päivämäärä: " +"\n" +
+                                "Kello: "+ "\n" +                                        
+                                "Paikka: " +" \n" +
+                                "Omat merkinnät:");
+            eventOwnMarkings.setText("");
+            repaint();
+            return;
+        }
+
 
         if (e.getType() == 0) type = ", luento";
         if (e.getType() == 1) type = ", laskuharjoitus";
@@ -1191,7 +1285,6 @@ public class GUI extends JFrame
         if (e.getType() == 3) type = ", tentti";
         if (e.getType() == 4) type = ", muu";
         if (e.getCourseID() < 0) type = "";
-
 
         eventProperties.setText(e.getName() + type + "\n" +
                                 "Päivämäärä: " + parseDate(e.getStarttime()) + "\n" +
