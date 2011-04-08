@@ -848,7 +848,7 @@ public class GUI extends JFrame
         mainRight.removeAll();
         mainLeft.removeAll();
         mainLeft.add(courseViewMain);
-        mainRight.add(addNewCourse2);
+        //mainRight.add(addNewCourse2);
         mainRight.add("South",toWeekView);
 
         mainRight.validate();
